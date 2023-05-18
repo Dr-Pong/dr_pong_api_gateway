@@ -1,4 +1,4 @@
 export class SignUpRequestDto {
-	nickname: string;
-	imgId: number;
+  nickname: string;
+  imgId: number;
 }
