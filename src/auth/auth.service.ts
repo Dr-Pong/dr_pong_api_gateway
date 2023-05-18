@@ -16,7 +16,11 @@ import { ProfileImageRepository } from './profile-image.repository';
 import { UserMeDto } from './dto/user.me.dto';
 import { TokenInterface } from './jwt/jwt.token.interface';
 import { GetUserMeDto } from './dto/get.user.me.dto';
-import { ROLETYPE_GUEST, ROLETYPE_NONAME } from './type.user.roletype';
+import {
+  ROLETYPE_GUEST,
+  ROLETYPE_MEMBER,
+  ROLETYPE_NONAME,
+} from './type.user.roletype';
 import { User } from './user.entity';
 import { ProfileImage } from './profile-image.entity';
 
@@ -118,17 +122,15 @@ export class AuthService {
     let authdto: AuthDto;
     if (!existUser) {
       const newUser = await this.userRepository.createUser(email);
-      authdto = {
-        id: newUser.id,
-        nickname: null,
-        secondAuthRequired: false,
-      };
+      authdto = new AuthDto(newUser.id, null, false, ROLETYPE_NONAME);
     } else {
-      authdto = {
-        id: existUser.id,
-        nickname: existUser.nickname,
-        secondAuthRequired: existUser.secondAuthSecret !== null,
-      };
+      authdto = new AuthDto(
+        existUser.id,
+        existUser.nickname,
+        existUser.secondAuthSecret !== null,
+        ROLETYPE_NONAME,
+      );
+      if (existUser.nickname) authdto.roleType = ROLETYPE_MEMBER;
     }
     return authdto;
   }
@@ -165,19 +167,19 @@ export class AuthService {
   }
 
   async getUserMe(getDto: GetUserMeDto): Promise<UserMeDto> {
-    const guestUserMeDto: UserMeDto = {
-      nickname: '',
-      imgUrl: '',
-      isSecondAuthOn: false,
-      roleType: ROLETYPE_GUEST,
-    };
+    const guestUserMeDto: UserMeDto = new UserMeDto(
+      '',
+      '',
+      false,
+      ROLETYPE_GUEST,
+    );
 
-    const nonameUserMeDto: UserMeDto = {
-      nickname: '',
-      imgUrl: '',
-      isSecondAuthOn: false,
-      roleType: ROLETYPE_NONAME,
-    };
+    const nonameUserMeDto: UserMeDto = new UserMeDto(
+      '',
+      '',
+      false,
+      ROLETYPE_NONAME,
+    );
 
     if (!getDto.token) {
       return guestUserMeDto;
@@ -192,13 +194,14 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
+    const responseDto: UserMeDto = new UserMeDto(
+      user.nickname,
+      user.image.url,
+      user.secondAuthSecret !== null,
+      ROLETYPE_NONAME,
+    );
+    if (user.nickname) responseDto.roleType = ROLETYPE_MEMBER;
 
-    const responseDto: UserMeDto = {
-      nickname: user.nickname,
-      imgUrl: user.image.url,
-      isSecondAuthOn: user.secondAuthSecret !== null,
-      roleType: user.roleType,
-    };
     return responseDto;
   }
 }
