@@ -1,5 +1,15 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  DefaultValuePipe,
+  Body,
+  Patch,
+  ParseBoolPipe,
+} from '@nestjs/common';
 import axios from 'axios';
+import { UserAchievementsResponseDto } from './dto/user.achievements.response.dto';
 
 @Controller('/users')
 export class UserGatewayController {
@@ -18,75 +28,80 @@ export class UserGatewayController {
     @Param('nickname') nickname: string,
     @Query('selected', new DefaultValuePipe(false), ParseBoolPipe)
     selected: boolean,
-  ): Promise<UserAchievementsResponseDto> {}
+  ): Promise<UserAchievementsResponseDto> {
+    return await axios.get(
+      process.env.WEBSERVER_URI + '/${nickname}/achievements',
+      { params: nickname },
+    );
+  }
 
-  @Get('/:nickname/emojis')
-  async userEmojisByNicknameGet(
-    @Param('nickname') nickname: string,
-    @Query('selected', new DefaultValuePipe(false), ParseBoolPipe)
-    selected: boolean,
-  ): Promise<UserEmojisResponseDto> {}
+  // @Get('/:nickname/emojis')
+  // async userEmojisByNicknameGet(
+  //   @Param('nickname') nickname: string,
+  //   @Query('selected', new DefaultValuePipe(false), ParseBoolPipe)
+  //   selected: boolean,
+  // ): Promise<UserEmojisResponseDto> {}
 
-  @Get('/:nickname/titles')
-  async usersTitlesByNicknameGet(
-    @Param('nickname') nickname: string,
-  ): Promise<UserTitlesResponseDto> {}
+  // @Get('/:nickname/titles')
+  // async usersTitlesByNicknameGet(
+  //   @Param('nickname') nickname: string,
+  // ): Promise<UserTitlesResponseDto> {}
 
-  @Get('/:nickname/ranks/total')
-  async userTotalRankByNicknameGet(
-    @Param('nickname') nickname: string,
-  ): Promise<UserTotalRankResponseDto> {}
+  // @Get('/:nickname/ranks/total')
+  // async userTotalRankByNicknameGet(
+  //   @Param('nickname') nickname: string,
+  // ): Promise<UserTotalRankResponseDto> {}
 
-  @Get('/:nickname/ranks/season')
-  async userSeasonRankByNicknameGet(
-    @Param('nickname') nickname: string,
-  ): Promise<UserSeasonRankResponseDto> {}
+  // @Get('/:nickname/ranks/season')
+  // async userSeasonRankByNicknameGet(
+  //   @Param('nickname') nickname: string,
+  // ): Promise<UserSeasonRankResponseDto> {}
 
-  @Get('/:nickname/stats/total')
-  async userTotalStatByNicknameGet(
-    @Param('nickname') nickname: string,
-  ): Promise<UserGameTotalStatResponseDto> {}
+  // @Get('/:nickname/stats/total')
+  // async userTotalStatByNicknameGet(
+  //   @Param('nickname') nickname: string,
+  // ): Promise<UserGameTotalStatResponseDto> {}
 
-  @Get('/:nickname/stats/season')
-  async userSeasonStatByNicknameGet(
-    @Param('nickname') nickname: string,
-  ): Promise<UserGameSeasonStatResponseDto> {}
+  // @Get('/:nickname/stats/season')
+  // async userSeasonStatByNicknameGet(
+  //   @Param('nickname') nickname: string,
+  // ): Promise<UserGameSeasonStatResponseDto> {}
 
-  @Get('/:nickname/records')
-  async userGameRecordsByNicknameGet(
-    @Param('nickname') nickname: string,
-    @Query('coount', new DefaultValuePipe(10), ParseIntPipe) count: number,
-    @Query('lastGameId', new DefaultValuePipe(0), ParseIntPipe)
-    lastGameId: number,
-  ): Promise<UserGameRecordsResponseDto> {}
+  // @Get('/:nickname/records')
+  // async userGameRecordsByNicknameGet(
+  //   @Param('nickname') nickname: string,
+  //   @Query('coount', new DefaultValuePipe(10), ParseIntPipe) count: number,
+  //   @Query('lastGameId', new DefaultValuePipe(0), ParseIntPipe)
+  //   lastGameId: number,
+  // ): Promise<UserGameRecordsResponseDto> {}
 
-  @Patch('/:nickname/title')
-  async usersDetailByNicknamePatch(
-    @Param('nickname') nickname: string,
-    @Body() body,
-  ): Promise<void> {}
+  // @Patch('/:nickname/title')
+  // async usersDetailByNicknamePatch(
+  //   @Param('nickname') nickname: string,
+  //   @Body() body,
+  // ): Promise<void> {}
 
-  @Patch('/:nickname/image')
-  async usersImageByNicknamePatch(
-    @Param('nickname') nickname: string,
-    @Body() body,
-  ): Promise<void> {}
+  // @Patch('/:nickname/image')
+  // async usersImageByNicknamePatch(
+  //   @Param('nickname') nickname: string,
+  //   @Body() body,
+  // ): Promise<void> {}
 
-  @Patch('/:nickname/message')
-  async usersMessageByNicknamePatch(
-    @Param('nickname') nickname: string,
-    @Body() body,
-  ): Promise<void> {}
+  // @Patch('/:nickname/message')
+  // async usersMessageByNicknamePatch(
+  //   @Param('nickname') nickname: string,
+  //   @Body() body,
+  // ): Promise<void> {}
 
-  @Patch('/:nickname/achievements')
-  async userAchievementsByNicknamePatch(
-    @Param('nickname') nickname: string,
-    @Body() body,
-  ): Promise<void> {}
+  // @Patch('/:nickname/achievements')
+  // async userAchievementsByNicknamePatch(
+  //   @Param('nickname') nickname: string,
+  //   @Body() body,
+  // ): Promise<void> {}
 
-  @Patch('/:nickname/emojis')
-  async userEmojisByNicknamePatch(
-    @Param('nickname') nickname: string,
-    @Body() body,
-  ): Promise<void> {}
+  // @Patch('/:nickname/emojis')
+  // async userEmojisByNicknamePatch(
+  //   @Param('nickname') nickname: string,
+  //   @Body() body,
+  // ): Promise<void> {}
 }
