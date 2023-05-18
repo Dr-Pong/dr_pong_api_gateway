@@ -1,3 +1,3 @@
 export class GetUserMeDto {
-	token: string;
+  token: string;
 }
