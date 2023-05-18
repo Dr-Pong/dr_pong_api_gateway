@@ -1,3 +1,3 @@
-class JwtDto {
-	token:string
+export class JwtDto {
+  token: string;
 }
