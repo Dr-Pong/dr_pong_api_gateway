@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -16,11 +17,7 @@ import { ProfileImageRepository } from './profile-image.repository';
 import { UserMeDto } from './dto/user.me.dto';
 import { TokenInterface } from './jwt/jwt.token.interface';
 import { GetUserMeDto } from './dto/get.user.me.dto';
-import {
-  ROLETYPE_GUEST,
-  ROLETYPE_MEMBER,
-  ROLETYPE_NONAME,
-} from './type.user.roletype';
+import { ROLETYPE_MEMBER, ROLETYPE_NONAME } from './type.user.roletype';
 import { User } from './user.entity';
 import { ProfileImage } from './profile-image.entity';
 
@@ -31,6 +28,7 @@ export class AuthService {
     private readonly imageRepository: ProfileImageRepository,
     private jwtService: JwtService,
   ) {}
+  private readonly logger: Logger = new Logger(AuthService.name);
   secondAuth: Map<number, string> = new Map();
 
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
@@ -95,7 +93,7 @@ export class AuthService {
   }
 
   async getFTAccessToken(authCode: string): Promise<string> {
-    console.log(process.env.FT_TOKEN_URI);
+    this.logger.log(process.env.FT_TOKEN_URI);
     try {
       const response = await axios.post(process.env.FT_TOKEN_URI, {
         grant_type: 'authorization_code',
@@ -106,7 +104,7 @@ export class AuthService {
       });
       return response.data.access_token;
     } catch (error) {
-      console.log(error);
+      this.logger.log(error);
       throw new UnauthorizedException();
     }
   }
@@ -167,27 +165,13 @@ export class AuthService {
   }
 
   async getUserMe(getDto: GetUserMeDto): Promise<UserMeDto> {
-    const guestUserMeDto: UserMeDto = new UserMeDto(
-      '',
-      '',
-      false,
-      ROLETYPE_GUEST,
-    );
-
-    const nonameUserMeDto: UserMeDto = new UserMeDto(
-      '',
-      '',
-      false,
-      ROLETYPE_NONAME,
-    );
-
     if (!getDto.token) {
-      return guestUserMeDto;
+      return UserMeDto.guestUserMe();
     }
 
     const jwt: TokenInterface = this.jwtService.verify(getDto.token);
     if (jwt.roleType === ROLETYPE_NONAME) {
-      return nonameUserMeDto;
+      return UserMeDto.nonameUserMe();
     }
 
     const user = await this.userRepository.findById(jwt.id);
