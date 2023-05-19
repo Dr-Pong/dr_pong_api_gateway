@@ -120,14 +120,9 @@ export class AuthService {
     let authdto: AuthDto;
     if (!existUser) {
       const newUser = await this.userRepository.createUser(email);
-      authdto = new AuthDto(newUser.id, null, false, ROLETYPE_NONAME);
+      authdto = AuthDto.defaultUser(newUser.id, null, false, ROLETYPE_NONAME);
     } else {
-      authdto = new AuthDto(
-        existUser.id,
-        existUser.nickname,
-        existUser.secondAuthSecret !== null,
-        ROLETYPE_NONAME,
-      );
+      authdto = AuthDto.fromNonameUser(existUser);
       if (existUser.nickname) authdto.roleType = ROLETYPE_MEMBER;
     }
     return authdto;
@@ -178,12 +173,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
-    const responseDto: UserMeDto = new UserMeDto(
-      user.nickname,
-      user.image.url,
-      user.secondAuthSecret !== null,
-      ROLETYPE_NONAME,
-    );
+    const responseDto: UserMeDto = UserMeDto.fromUser(user);
     if (user.nickname) responseDto.roleType = ROLETYPE_MEMBER;
 
     return responseDto;
