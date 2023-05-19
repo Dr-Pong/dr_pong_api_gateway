@@ -1,5 +1,6 @@
 import { RoleType } from '../type.user.roletype';
 import { ROLETYPE_GUEST, ROLETYPE_NONAME } from '../type.user.roletype';
+import { User } from '../user.entity';
 
 export class UserMeDto {
   nickname: string;
@@ -30,6 +31,14 @@ export class UserMeDto {
       nickname: '',
       imgUrl: '',
       isSecondAuthOn: false,
+      roleType: ROLETYPE_NONAME,
+    };
+  }
+  static fromUser(user: User): UserMeDto {
+    return {
+      nickname: user.nickname,
+      imgUrl: user.image.url,
+      isSecondAuthOn: user.secondAuthSecret !== null,
       roleType: ROLETYPE_NONAME,
     };
   }
