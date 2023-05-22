@@ -20,6 +20,7 @@ import { GetUserMeDto } from './dto/get.user.me.dto';
 import { ROLETYPE_MEMBER, ROLETYPE_NONAME } from './type.user.roletype';
 import { User } from './user.entity';
 import { ProfileImage } from './profile-image.entity';
+import { generateOtpResponseDto } from './dto/auth.generateOtp.response.dto';
 
 @Injectable()
 export class AuthService {
@@ -41,12 +42,7 @@ export class AuthService {
     if (user.secondAuthSecret) throw new BadRequestException();
 
     this.secondAuth.set(userId, secretKey);
-
-    return {
-      secretKey,
-      url,
-      qrCode,
-    };
+    return generateOtpResponseDto.response(secretKey, url, qrCode);
   }
 
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
