@@ -1,7 +1,12 @@
 import { Module } from '@nestjs/common';
-import { UserGatewayController } from './user.gateway.controller';
-
+import { UserGatewayCollectablesController } from './gateway-user-get-collectables-controller';
+import { UserGatewayDetailController } from './gateway-user-detail-controller.dto';
+import { UserGatewayStatRankController } from './gateway-user-stat-rank-controller';
 @Module({
-  controllers: [UserGatewayController],
+  controllers: [
+    UserGatewayCollectablesController,
+    UserGatewayDetailController,
+    UserGatewayStatRankController,
+  ],
 })
 export class GatewayModule {}
