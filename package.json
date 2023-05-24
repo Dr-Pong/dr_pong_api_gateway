@@ -21,15 +21,18 @@
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.3.2",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/typeorm": "^9.0.1",
     "axios": "^1.4.0",
+    "dotenv": "^16.0.3",
     "otplib": "^12.0.1",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
+    "pg": "^8.11.0",
     "qrcode": "^1.5.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
@@ -60,12 +63,29 @@
     "typescript": "^4.7.4"
   },
   "jest": {
+    "verbose": true,
+    "maxWorkers": 1,
+    "forceExit": true,
+    "preset": "ts-jest",
+    "setupFiles": [
+      "dotenv/config"
+    ],
+    "testURL": "http://localhost/",
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": "./",
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "modulePaths": [
+      "<rootDir>/src"
+    ],
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/src/$1"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
