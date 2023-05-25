@@ -113,7 +113,7 @@ describe('GatewayController', () => {
           '/users/' + user.nickname + '/images',
         );
         expect(response.statusCode).toBe(200);
-        expect(response.body[0]).toHaveProperty('titles');
+        expect(response.body[0]).toHaveProperty('url');
       });
     });
   });
