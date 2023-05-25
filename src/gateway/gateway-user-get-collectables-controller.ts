@@ -14,6 +14,7 @@ import axios from 'axios';
 import { UserAchievementsResponseDto } from './dtos/user-achievements-response.dto';
 import { UserEmojisResponseDto } from './dtos/user-emoji-response.dto';
 import { UserTitlesResponseDto } from './dtos/user-titles-response.dto';
+import { ProfileImageDto } from './dtos/user-images-response.dto';
 
 // 요청에 헤더도 포함해서 넘기기
 @Controller('/users')
@@ -79,6 +80,19 @@ export class UserGatewayCollectablesController {
       }
     }
   }
+
+  @Get('/images')
+  async getUserImages(): Promise<ProfileImageDto> {
+    try {
+      const response = await axios.get(
+        process.env.WEBSERVER_URI + `/users/images`,
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // @Get('/:nickname/records')
   // async userGameRecordsByNicknameGet(
   //   @Param('nickname') nickname: string,
