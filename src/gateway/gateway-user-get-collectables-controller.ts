@@ -81,21 +81,15 @@ export class UserGatewayCollectablesController {
     }
   }
 
-  @Get('/:nickname/images')
-  async getUserImages(
-    @Param('nickname') nickname: string,
-  ): Promise<ProfileImageDto> {
+  @Get('/images')
+  async getUserImages(): Promise<ProfileImageDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/users/${nickname}/images`,
+        process.env.WEBSERVER_URI + `/users/images`,
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error;
     }
   }
 

@@ -99,18 +99,9 @@ describe('GatewayController', () => {
       });
     });
     describe('/users/{nickname}/images', () => {
-      it('라우팅 유저 닉네임 없는경우', async () => {
-        const user: User = await testService.createBasicUser();
+      it('라우팅 성공 했을때', async () => {
         const response = await request(app.getHttpServer()).get(
-          '/users/' + user.nickname + 'noexist' + '/images',
-        );
-        expect(response.statusCode).toBe(404);
-        expect(response.body.message).toBe('No such User');
-      });
-      it('라우팅 유저 닉네임 있는 경우', async () => {
-        const user = await testService.createBasicUser();
-        const response = await request(app.getHttpServer()).get(
-          '/users/' + user.nickname + '/images',
+          '/users/images',
         );
         expect(response.statusCode).toBe(200);
         expect(response.body[0]).toHaveProperty('url');
