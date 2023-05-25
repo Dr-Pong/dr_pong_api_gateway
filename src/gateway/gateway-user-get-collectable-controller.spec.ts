@@ -42,7 +42,7 @@ describe('GatewayController', () => {
 
   describe('ROUTE USER GET TEST', () => {
     describe('/users/{nickname}/achievements?selected=true', () => {
-      it('라우팅 유저 닉니임이 없는 경우', async () => {
+      it('라우팅 유저 닉네임 없는 경우', async () => {
         const user: User = await testService.createBasicUser();
         const response = await request(app.getHttpServer()).get(
           '/users/' + user.nickname + 'noexist' + '/achievements?selected=true',
@@ -50,7 +50,7 @@ describe('GatewayController', () => {
         expect(response.statusCode).toBe(404);
         expect(response.body.message).toBe('No such User');
       });
-      it('라우팅 유저 닉니임이 있는 경우', async () => {
+      it('라우팅 유저 닉네임 있는 경우', async () => {
         const user = await testService.createBasicUser();
         const response = await request(app.getHttpServer()).get(
           '/users/' + user.nickname + '/achievements?selected=true',
@@ -61,7 +61,7 @@ describe('GatewayController', () => {
     });
 
     describe('/users/{nickname}/emojis?selected=true', () => {
-      it('라우팅 유저 닉니임이 없는 경우', async () => {
+      it('라우팅 유저 닉네임 없는 경우', async () => {
         const user: User = await testService.createBasicUser();
         const response = await request(app.getHttpServer()).get(
           '/users/' + user.nickname + 'noexist' + '/emojis?selected=true',
@@ -70,7 +70,7 @@ describe('GatewayController', () => {
         expect(response.statusCode).toBe(404);
         expect(response.body.message).toBe('No such User');
       });
-      it('라우팅 유저 닉니임이 있는 경우', async () => {
+      it('라우팅 유저 닉네임 있는 경우', async () => {
         const user = await testService.createBasicUser();
         const response = await request(app.getHttpServer()).get(
           '/users/' + user.nickname + '/emojis?selected=true',
@@ -81,7 +81,7 @@ describe('GatewayController', () => {
     });
 
     describe('/users/{nickname}/titles', () => {
-      it('라우팅 유저 닉니임이 없는경우', async () => {
+      it('라우팅 유저 닉네임 없는경우', async () => {
         const user: User = await testService.createBasicUser();
         const response = await request(app.getHttpServer()).get(
           '/users/' + user.nickname + 'noexist' + '/titles',
@@ -89,13 +89,31 @@ describe('GatewayController', () => {
         expect(response.statusCode).toBe(404);
         expect(response.body.message).toBe('No such User');
       });
-      it('라우팅 유저 닉니임이 있는 경우', async () => {
+      it('라우팅 유저 닉네임 있는 경우', async () => {
         const user = await testService.createBasicUser();
         const response = await request(app.getHttpServer()).get(
           '/users/' + user.nickname + '/titles',
         );
         expect(response.statusCode).toBe(200);
         expect(response.body).toHaveProperty('titles');
+      });
+    });
+    describe('/users/{nickname}/images', () => {
+      it('라우팅 유저 닉네임 없는경우', async () => {
+        const user: User = await testService.createBasicUser();
+        const response = await request(app.getHttpServer()).get(
+          '/users/' + user.nickname + 'noexist' + '/images',
+        );
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toBe('No such User');
+      });
+      it('라우팅 유저 닉네임 있는 경우', async () => {
+        const user = await testService.createBasicUser();
+        const response = await request(app.getHttpServer()).get(
+          '/users/' + user.nickname + '/images',
+        );
+        expect(response.statusCode).toBe(200);
+        expect(response.body[0]).toHaveProperty('titles');
       });
     });
   });
