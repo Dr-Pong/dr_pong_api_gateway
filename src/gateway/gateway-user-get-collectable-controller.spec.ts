@@ -98,7 +98,7 @@ describe('GatewayController', () => {
         expect(response.body).toHaveProperty('titles');
       });
     });
-    describe('/users/{nickname}/images', () => {
+    describe('/users/images', () => {
       it('라우팅 성공 했을때', async () => {
         const response = await request(app.getHttpServer()).get(
           '/users/images',
