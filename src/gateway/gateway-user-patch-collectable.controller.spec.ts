@@ -8,11 +8,16 @@ import {
   addTransactionalDataSource,
   initializeTransactionalContext,
 } from 'typeorm-transactional';
-import { User } from 'src/auth/user.entity';
+import { JwtStrategy } from 'src/auth/jwt/auth.jwt.strategy';
+import { JwtService } from '@nestjs/jwt';
+
 describe('GatewayController', () => {
   let app: INestApplication;
   let testService: TestService;
   let dataSources: DataSource;
+  let jwtStrategy: JwtStrategy;
+  let jwtService: JwtService;
+
   initializeTransactionalContext();
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -22,6 +27,8 @@ describe('GatewayController', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     app.useGlobalPipes(new ValidationPipe());
+    jwtStrategy = moduleFixture.get<JwtStrategy>(JwtStrategy);
+    jwtService = moduleFixture.get<JwtService>(JwtService);
     testService = moduleFixture.get<TestService>(TestService);
     dataSources = moduleFixture.get<DataSource>(DataSource);
     await dataSources.synchronize(true);
@@ -45,120 +52,194 @@ describe('GatewayController', () => {
     describe('/:nickname/title', () => {
       it('라우팅 성공 했을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/title')
+          .patch('/users/' + user.nickname + '/title')
+          .set({ Authorization: `Bearer ${token}` })
           .send({ id: 1 });
         expect(response.statusCode).toBe(202);
       });
-      it('라우팅 실패했을때 : 없는 title id 요청시', async () => {
+      it('라우팅 실패했을때 : 해당 서버에서 보내는 에러일때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/title')
+          .patch('/users/' + user.nickname + '/title')
+          .set({ Authorization: `Bearer ${token}` })
           .send({ id: 128937 });
-        expect(response.statusCode).toBe(404);
+        expect(response.statusCode).not.toBe(202);
       });
       it('라우팅 실패했을때 : ValidatePipe 걸렸을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/title')
+          .patch('/users/' + user.nickname + '/title')
+          .set({ Authorization: `Bearer ${token}` })
           .send({ id: -1 });
         expect(response.statusCode).toBe(400);
+      });
+      it('라우팅 실패했을때 : jwt가드에 막혔을때', async () => {
+        const user = await testService.createBasicUser();
+        const token = 'worng token';
+        const response = await request(app.getHttpServer())
+          .patch('/users/' + user.nickname + '/title')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ id: -1 });
+        expect(response.statusCode).toBe(401);
       });
     });
 
     describe('/:nickname/image', () => {
       it('라우팅 성공 했을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/image')
+          .patch('/users/' + user.nickname + '/image')
+          .set({ Authorization: `Bearer ${token}` })
           .send({ id: 1 });
         expect(response.statusCode).toBe(202);
       });
-      it('라우팅 실패했을때 : 없는 이미지 id 요청시', async () => {
+      it('라우팅 실패했을때 : 서버에서 주는 에러 그래로 반환', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/image')
+          .patch('/users/' + user.nickname + '/image')
+          .set({ Authorization: `Bearer ${token}` })
           .send({ id: 128937 });
-        expect(response.statusCode).toBe(404);
+        expect(response.statusCode).not.toBe(202);
       });
       it('라우팅 실패했을때 : ValidatePipe 걸렸을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/image')
+          .patch('/users/' + user.nickname + '/image')
+          .set({ Authorization: `Bearer ${token}` })
           .send({ id: -1 });
         expect(response.statusCode).toBe(400);
+      });
+      it('라우팅 실패했을때 : jwt가드에 막혔을때', async () => {
+        const user = await testService.createBasicUser();
+        const token = 'worng token';
+        const response = await request(app.getHttpServer())
+          .patch('/users/' + user.nickname + '/image')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ id: '2' });
+        expect(response.statusCode).toBe(401);
       });
     });
 
     describe('/:nickname/message', () => {
       it('라우팅 성공 했을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/message')
-          .send({ id: 1 });
+          .patch('/users/' + user.nickname + '/message')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ message: 'test message' });
         expect(response.statusCode).toBe(202);
       });
-      it('라우팅 실패했을때 : 없는 유저 id 요청시', async () => {
+      it('라우팅 실패했을때 : 서버에서 주는 에러 그대로 : 없는 닉네임일때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/message')
-          .send({ id: 128937 });
+          .patch('/users/' + user.nickname + 'noexist' + '/message')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ message: 'test message' });
         expect(response.statusCode).toBe(404);
       });
       it('라우팅 실패했을때 : ValidatePipe 걸렸을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/message')
-          .send({ message: null });
+          .patch('/users/' + user.nickname + '/message')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ message: 1 });
         expect(response.statusCode).toBe(400);
+      });
+      it('라우팅 실패했을때 : jwt가드에 막혔을때', async () => {
+        const user = await testService.createBasicUser();
+        const token = 'worng token';
+        const response = await request(app.getHttpServer())
+          .patch('/users/' + user.nickname + '/message')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ message: 'test message' });
+        expect(response.statusCode).toBe(401);
       });
     });
     describe('/:nickname/achievements', () => {
       it('라우팅 성공 했을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/achievements')
-          .send({ id: 1 });
+          .patch('/users/' + user.nickname + '/achievements')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ ids: 1 });
         expect(response.statusCode).toBe(202);
       });
-      it('라우팅 실패했을때 : 없는 유저 id 요청시', async () => {
+      it('라우팅 실패했을때 : 서버에서 주는 에러 그대로 반환', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/achievements')
-          .send({ id: 128937 });
-        expect(response.statusCode).toBe(404);
+          .patch('/users/' + user.nickname + '/achievements')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ ids: 128937 });
+        expect(response.statusCode).not.toBe(202);
       });
       it('라우팅 실패했을때 : ValidatePipe 걸렸을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/achievements')
-          .send({ id: 'string' });
+          .patch('/users/' + user.nickname + '/achievements')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ ids: 'string' });
         expect(response.statusCode).toBe(400);
+      });
+      it('라우팅 실패했을때 : jwt가드에 막혔을때', async () => {
+        const user = await testService.createBasicUser();
+        const token = 'worng token';
+        const response = await request(app.getHttpServer())
+          .patch('/users/' + user.nickname + '/achievements')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ ids: -1 });
+        expect(response.statusCode).toBe(401);
       });
     });
-    describe.only('/:nickname/emojis', () => {
+    describe('/:nickname/emojis', () => {
       it('라우팅 성공 했을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/emojis')
-          .send({ id: 1 });
+          .patch('/users/' + user.nickname + '/emojis')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ ids: 1 });
         expect(response.statusCode).toBe(202);
       });
-      it('라우팅 실패했을때 : 없는 유저 id 요청시', async () => {
+      it('라우팅 실패했을때 : 서버에서 주는 에러 그대로 반환', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/emojis')
-          .send({ id: 128937 });
-        expect(response.statusCode).toBe(404);
+          .patch('/users/' + user.nickname + '/emojis')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ ids: 128937 });
+        expect(response.statusCode).not.toBe(202);
       });
       it('라우팅 실패했을때 : ValidatePipe 걸렸을때', async () => {
         const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/' + user.nickname + '/emojis')
-          .send({ id: 'string' });
+          .patch('/users/' + user.nickname + '/emojis')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ ids: 'string' });
         expect(response.statusCode).toBe(400);
       });
-      // it('Patch body에 null 들어갔을때')
+      it('라우팅 실패했을때 : jwt가드에 막혔을때', async () => {
+        const user = await testService.createBasicUser();
+        const token = 'worng token';
+        const response = await request(app.getHttpServer())
+          .patch('/users/' + user.nickname + '/emojis')
+          .set({ Authorization: `Bearer ${token}` })
+          .send({ ids: null });
+        expect(response.statusCode).toBe(401);
+      });
     });
   });
 });
