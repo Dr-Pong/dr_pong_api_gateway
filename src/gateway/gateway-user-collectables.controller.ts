@@ -8,9 +8,7 @@ import {
   Patch,
   ParseBoolPipe,
   Logger,
-  NotFoundException,
   UseGuards,
-  UnauthorizedException,
 } from '@nestjs/common';
 import axios from 'axios';
 import { UserAchievementsResponseDto } from './dtos/user-achievements-response.dto';
@@ -44,11 +42,7 @@ export class UserGatewayCollectablesController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
 
@@ -65,11 +59,7 @@ export class UserGatewayCollectablesController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
 
@@ -83,11 +73,7 @@ export class UserGatewayCollectablesController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
 
@@ -129,9 +115,7 @@ export class UserGatewayCollectablesController {
         },
       );
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else throw error;
+      throw error.response.data;
     }
   }
 
@@ -149,9 +133,7 @@ export class UserGatewayCollectablesController {
         },
       });
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else throw error;
+      throw error.response.data;
     }
   }
 
@@ -169,9 +151,7 @@ export class UserGatewayCollectablesController {
         },
       });
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else throw error;
+      throw error.response.data;
     }
   }
 
@@ -190,9 +170,7 @@ export class UserGatewayCollectablesController {
         },
       );
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else throw error;
+      throw error.response.data;
     }
   }
 
@@ -200,18 +178,14 @@ export class UserGatewayCollectablesController {
   @Patch('/:nickname/emojis')
   async userEmojisByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body() PatchRequestDto: PatchUserEmojisRequestDto, // DTO 로 받기
+    @Body() PatchRequestDto: PatchUserEmojisRequestDto,
   ): Promise<void> {
     try {
       await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/emojis`, {
         data: PatchRequestDto.ids,
       });
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else if (error.response?.status === 401) {
-        throw new UnauthorizedException(error.response.data.message);
-      } else throw error;
+      throw error.response.data;
     }
   }
 }
