@@ -17,11 +17,7 @@ export class UserGatewayStatRankController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
 
@@ -35,11 +31,7 @@ export class UserGatewayStatRankController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
   @Get('/:nickname/ranks/total')
@@ -52,11 +44,7 @@ export class UserGatewayStatRankController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
 
@@ -71,11 +59,7 @@ export class UserGatewayStatRankController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
 }

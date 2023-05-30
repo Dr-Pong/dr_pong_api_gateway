@@ -8,13 +8,21 @@ import {
   Patch,
   ParseBoolPipe,
   Logger,
-  NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import axios from 'axios';
 import { UserAchievementsResponseDto } from './dtos/user-achievements-response.dto';
 import { UserEmojisResponseDto } from './dtos/user-emoji-response.dto';
 import { UserTitlesResponseDto } from './dtos/user-titles-response.dto';
 import { ProfileImageDto } from './dtos/user-images-response.dto';
+import { AuthGuard } from '@nestjs/passport';
+import {
+  PatchUserAchievementsRequestDto,
+  PatchUserEmojisRequestDto,
+  PatchUserImageRequestDto,
+  PatchUserMessageRequestDto,
+  PatchUserTitleRequestDto,
+} from './dtos/user-patch-input.dto';
 
 // 요청에 헤더도 포함해서 넘기기
 @Controller('/users')
@@ -34,11 +42,7 @@ export class UserGatewayCollectablesController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
 
@@ -55,11 +59,7 @@ export class UserGatewayCollectablesController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
 
@@ -73,11 +73,7 @@ export class UserGatewayCollectablesController {
       );
       return response.data;
     } catch (error) {
-      if (error.response?.status === 404) {
-        throw new NotFoundException(error.response.data.message);
-      } else {
-        throw error;
-      }
+      throw error.response.data;
     }
   }
 
@@ -102,70 +98,84 @@ export class UserGatewayCollectablesController {
   // ): Promise<UserGameRecordsResponseDto> {}
 
   // Patch
+  @UseGuards(AuthGuard('jwt'))
   @Patch('/:nickname/title')
   async usersDetailByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body() id: number,
+    @Body() PatchRequestDto: PatchUserTitleRequestDto,
   ): Promise<void> {
     try {
       await axios.patch(
         process.env.WEBSERVER_URI + `/users/${nickname}/title`,
         {
-          data: {
-            id: id,
-          },
+          data: { id: PatchRequestDto.id },
         },
       );
-    } catch (error) {}
+    } catch (error) {
+      throw error.response.data;
+    }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch('/:nickname/image')
   async usersImageByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body() id: number,
+    @Body() PatchRequestDto: PatchUserImageRequestDto,
   ): Promise<void> {
-    await axios.patch(process.env.WEBSERVER_URI + '/${nickname}/image', {
-      params: nickname,
-      data: {
-        id: id,
-      },
-    });
+    try {
+      await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/image`, {
+        data: { id: PatchRequestDto.id },
+      });
+    } catch (error) {
+      throw error.response.data;
+    }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch('/:nickname/message')
   async usersMessageByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body()
-    message: string,
+    @Body() PatchRequestDto: PatchUserMessageRequestDto,
   ): Promise<void> {
-    await axios.patch(process.env.WEBSERVER_URI + '/${nickname}/message', {
-      params: nickname,
-      data: {
-        message: message,
-      },
-    });
+    try {
+      await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/message`, {
+        data: { message: PatchRequestDto.message },
+      });
+    } catch (error) {
+      throw error.response.data;
+    }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch('/:nickname/achievements')
   async userAchievementsByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body() ids: (number | null)[],
+    @Body() PatchRequestDto: PatchUserAchievementsRequestDto,
   ): Promise<void> {
-    await axios.patch(process.env.WEBSERVER_URI + '/${nickname}/achievements', {
-      params: nickname,
-      data: ids,
-    });
+    try {
+      await axios.patch(
+        process.env.WEBSERVER_URI + `/${nickname}/achievements`,
+        {
+          data: { ids: PatchRequestDto.ids },
+        },
+      );
+    } catch (error) {
+      throw error.response.data;
+    }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch('/:nickname/emojis')
   async userEmojisByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body()
-    ids: (number | null)[],
+    @Body() PatchRequestDto: PatchUserEmojisRequestDto,
   ): Promise<void> {
-    await axios.patch(process.env.WEBSERVER_URI + '/${nickname}/emojis', {
-      params: nickname,
-      data: ids,
-    });
+    try {
+      await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/emojis`, {
+        data: { ids: PatchRequestDto.ids },
+      });
+    } catch (error) {
+      throw error.response.data;
+    }
   }
 }
