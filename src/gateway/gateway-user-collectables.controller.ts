@@ -98,20 +98,17 @@ export class UserGatewayCollectablesController {
   // ): Promise<UserGameRecordsResponseDto> {}
 
   // Patch
-  // TODO: Patch 인풋에도 Dto 로 Clgass validator 로 검증하기 -> 다를시 400 BadRequest 에러
   @UseGuards(AuthGuard('jwt'))
   @Patch('/:nickname/title')
   async usersDetailByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body() PatchRequestDto: PatchUserTitleRequestDto, // DTO 로 받기
+    @Body() PatchRequestDto: PatchUserTitleRequestDto,
   ): Promise<void> {
     try {
       await axios.patch(
         process.env.WEBSERVER_URI + `/users/${nickname}/title`,
         {
-          data: {
-            id: PatchRequestDto.id,
-          },
+          data: { id: PatchRequestDto.id },
         },
       );
     } catch (error) {
@@ -123,14 +120,11 @@ export class UserGatewayCollectablesController {
   @Patch('/:nickname/image')
   async usersImageByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body() PatchRequestDto: PatchUserImageRequestDto, // DTO 로 받기
+    @Body() PatchRequestDto: PatchUserImageRequestDto,
   ): Promise<void> {
     try {
-      await axios.patch(process.env.WEBSERVER_URI + '/${nickname}/image', {
-        params: nickname,
-        data: {
-          id: PatchRequestDto.id,
-        },
+      await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/image`, {
+        data: { id: PatchRequestDto.id },
       });
     } catch (error) {
       throw error.response.data;
@@ -141,14 +135,11 @@ export class UserGatewayCollectablesController {
   @Patch('/:nickname/message')
   async usersMessageByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body() PatchRequestDto: PatchUserMessageRequestDto, // DTO 로 받기
+    @Body() PatchRequestDto: PatchUserMessageRequestDto,
   ): Promise<void> {
     try {
-      await axios.patch(process.env.WEBSERVER_URI + '/${nickname}/message', {
-        params: nickname,
-        data: {
-          message: PatchRequestDto.message,
-        },
+      await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/message`, {
+        data: { message: PatchRequestDto.message },
       });
     } catch (error) {
       throw error.response.data;
@@ -159,14 +150,13 @@ export class UserGatewayCollectablesController {
   @Patch('/:nickname/achievements')
   async userAchievementsByNicknamePatch(
     @Param('nickname') nickname: string,
-    @Body() PatchRequestDto: PatchUserAchievementsRequestDto, // DTO로 받기
+    @Body() PatchRequestDto: PatchUserAchievementsRequestDto,
   ): Promise<void> {
     try {
       await axios.patch(
-        process.env.WEBSERVER_URI + '/${nickname}/achievements',
+        process.env.WEBSERVER_URI + `/${nickname}/achievements`,
         {
-          params: nickname,
-          data: PatchRequestDto.ids,
+          data: { ids: PatchRequestDto.ids },
         },
       );
     } catch (error) {
@@ -182,7 +172,7 @@ export class UserGatewayCollectablesController {
   ): Promise<void> {
     try {
       await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/emojis`, {
-        data: PatchRequestDto.ids,
+        data: { ids: PatchRequestDto.ids },
       });
     } catch (error) {
       throw error.response.data;
