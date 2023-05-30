@@ -4,12 +4,14 @@ import { ROLETYPE_MEMBER } from 'src/auth/type.user.roletype';
 import { ProfileImage } from 'src/auth/profile-image.entity';
 import { User } from 'src/auth/user.entity';
 import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class TestService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private jwtService: JwtService,
     @InjectRepository(ProfileImage)
     private profileImageRepository: Repository<ProfileImage>,
   ) {}
@@ -46,6 +48,15 @@ export class TestService {
     });
     this.users.push(user);
     return user;
+  }
+
+  async giveTokenToUser(user: User) {
+    const token = this.jwtService.sign({
+      id: user.id,
+      nickname: user.nickname,
+      secondAuthRequired: user.secondAuthSecret,
+    });
+    return token;
   }
 
   async createBasicUsers(): Promise<void> {
