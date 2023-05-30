@@ -47,9 +47,8 @@ describe('GatewayController', () => {
         const response = await request(app.getHttpServer()).get(
           '/users/' + user.nickname + 'noexist' + '/achievements?selected=true',
         );
-        expect(response.statusCode).not.toBe(200);
-        expect(response.body).not.toHaveProperty('achievements');
-        // expect(response.body.message).toBe('No such User');
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toBe('No such User');
       });
       it('라우팅 유저 닉네임 있는 경우', async () => {
         const user = await testService.createBasicUser();
@@ -68,8 +67,8 @@ describe('GatewayController', () => {
           '/users/' + user.nickname + 'noexist' + '/emojis?selected=true',
         );
 
-        expect(response.statusCode).not.toBe(200);
-        expect(response.body).not.toHaveProperty('emojis');
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toBe('No such User');
       });
       it('라우팅 유저 닉네임 있는 경우', async () => {
         const user = await testService.createBasicUser();
@@ -87,8 +86,8 @@ describe('GatewayController', () => {
         const response = await request(app.getHttpServer()).get(
           '/users/' + user.nickname + 'noexist' + '/titles',
         );
-        expect(response.statusCode).not.toBe(200);
-        expect(response.body).not.toHaveProperty('titles');
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toBe('No such User');
       });
       it('라우팅 유저 닉네임 있는 경우', async () => {
         const user = await testService.createBasicUser();
@@ -99,14 +98,13 @@ describe('GatewayController', () => {
         expect(response.body).toHaveProperty('titles');
       });
     });
-    // 현재 web-server에 이 함수 없음 컨트롤러만
     describe('/users/images', () => {
       it('라우팅 성공 했을때', async () => {
         const response = await request(app.getHttpServer()).get(
           '/users/images',
         );
         expect(response.statusCode).toBe(200);
-        expect(response.body).toHaveProperty('url');
+        expect(response.body[0]).toHaveProperty('url');
       });
     });
   });
