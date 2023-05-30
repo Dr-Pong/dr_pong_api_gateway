@@ -70,7 +70,6 @@ describe('GatewayController', () => {
 
         expect(response.statusCode).not.toBe(200);
         expect(response.body).not.toHaveProperty('emojis');
-        // expect(response.body.message).toBe('No such User');
       });
       it('라우팅 유저 닉네임 있는 경우', async () => {
         const user = await testService.createBasicUser();
