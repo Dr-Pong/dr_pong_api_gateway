@@ -25,8 +25,8 @@ describe('GatewayController', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    await app.init();
     app.useGlobalPipes(new ValidationPipe());
+    await app.init();
     jwtStrategy = moduleFixture.get<JwtStrategy>(JwtStrategy);
     jwtService = moduleFixture.get<JwtService>(JwtService);
     testService = moduleFixture.get<TestService>(TestService);
@@ -172,7 +172,7 @@ describe('GatewayController', () => {
         const response = await request(app.getHttpServer())
           .patch('/users/' + user.nickname + '/achievements')
           .set({ Authorization: `Bearer ${token}` })
-          .send({ ids: 1 });
+          .send({ ids: [1, 2, 3] });
         expect(response.statusCode).toBe(202);
       });
       it('라우팅 실패했을때 : 서버에서 주는 에러 그대로 반환', async () => {
@@ -181,7 +181,7 @@ describe('GatewayController', () => {
         const response = await request(app.getHttpServer())
           .patch('/users/' + user.nickname + '/achievements')
           .set({ Authorization: `Bearer ${token}` })
-          .send({ ids: 128937 });
+          .send({ ids: [128937, 2, 3] });
         expect(response.statusCode).not.toBe(202);
       });
       it('라우팅 실패했을때 : ValidatePipe 걸렸을때', async () => {
@@ -199,7 +199,7 @@ describe('GatewayController', () => {
         const response = await request(app.getHttpServer())
           .patch('/users/' + user.nickname + '/achievements')
           .set({ Authorization: `Bearer ${token}` })
-          .send({ ids: -1 });
+          .send({ ids: [1, 2, 3] });
         expect(response.statusCode).toBe(401);
       });
     });
@@ -210,7 +210,7 @@ describe('GatewayController', () => {
         const response = await request(app.getHttpServer())
           .patch('/users/' + user.nickname + '/emojis')
           .set({ Authorization: `Bearer ${token}` })
-          .send({ ids: 1 });
+          .send({ ids: [1, 2, 3, 4] });
         expect(response.statusCode).toBe(202);
       });
       it('라우팅 실패했을때 : 서버에서 주는 에러 그대로 반환', async () => {
@@ -219,7 +219,7 @@ describe('GatewayController', () => {
         const response = await request(app.getHttpServer())
           .patch('/users/' + user.nickname + '/emojis')
           .set({ Authorization: `Bearer ${token}` })
-          .send({ ids: 128937 });
+          .send({ ids: [128937, 2, 3, 2] });
         expect(response.statusCode).not.toBe(202);
       });
       it('라우팅 실패했을때 : ValidatePipe 걸렸을때', async () => {
@@ -237,7 +237,7 @@ describe('GatewayController', () => {
         const response = await request(app.getHttpServer())
           .patch('/users/' + user.nickname + '/emojis')
           .set({ Authorization: `Bearer ${token}` })
-          .send({ ids: null });
+          .send({ ids: [1, 2, 3, 4] });
         expect(response.statusCode).toBe(401);
       });
     });
