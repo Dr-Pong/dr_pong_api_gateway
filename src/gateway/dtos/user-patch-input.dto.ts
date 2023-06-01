@@ -1,4 +1,4 @@
-import { IsPositive, IsString, Length, IsNotEmpty } from 'class-validator';
+import { IsPositive, IsString, Length, IsNotEmpty, ArrayMaxSize } from 'class-validator';
 
 export class PatchUserTitleRequestDto {
   @IsPositive()
@@ -22,6 +22,7 @@ export class PatchUserMessageRequestDto {
 
 export class PatchUserAchievementsRequestDto {
   @IsPositive({ each: true })
+  // @ArrayMaxSize
   ids: (number | null)[];
 }
 
