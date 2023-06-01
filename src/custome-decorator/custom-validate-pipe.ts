@@ -1,8 +1,4 @@
-import {
-  registerDecorator,
-  ValidationOptions,
-  ValidationArguments,
-} from 'class-validator';
+import { registerDecorator, ValidationOptions } from 'class-validator';
 
 export function FixedArraySize(
   size: string,
@@ -15,13 +11,13 @@ export function FixedArraySize(
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any[], args: ValidationArguments) {
+        validate(value: (number | null)[]) {
           if (!Array.isArray(value)) {
             return false;
           }
           return value.length === +size;
         },
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage() {
           return `Array size must be exactly ${size}.`;
         },
       },
@@ -39,7 +35,7 @@ export function CheckArrayValueNumberOrNull(
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any[], args: ValidationArguments) {
+        validate(value: (number | null)[]) {
           if (!Array.isArray(value)) {
             return false;
           }
@@ -47,7 +43,7 @@ export function CheckArrayValueNumberOrNull(
             (v) => (typeof v === 'number' && v > 0) || v === null,
           );
         },
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage() {
           return `Array value must be number or null.`;
         },
       },
