@@ -1,4 +1,8 @@
 import { IsPositive, IsString, Length, IsNotEmpty } from 'class-validator';
+import {
+  FixedArraySize,
+  CheckArrayValueNumberOrNull,
+} from 'src/custome-decorator/custom-validate-pipe';
 
 export class PatchUserTitleRequestDto {
   @IsPositive()
@@ -11,7 +15,6 @@ export class PatchUserImageRequestDto {
 }
 
 export class PatchUserMessageRequestDto {
-  // 프론트와 status message 길이 정하기, null 들어갈수 있는지
   @IsString()
   @IsNotEmpty()
   @Length(0, 60, {
@@ -21,11 +24,13 @@ export class PatchUserMessageRequestDto {
 }
 
 export class PatchUserAchievementsRequestDto {
-  @IsPositive({ each: true })
+  @FixedArraySize(process.env.ACHIEVEMENTS_ARRAY_SIZE)
+  @CheckArrayValueNumberOrNull()
   ids: (number | null)[];
 }
 
 export class PatchUserEmojisRequestDto {
-  @IsPositive({ each: true })
+  @FixedArraySize(process.env.EMOJIS_ARRAY_SIZE)
+  @CheckArrayValueNumberOrNull()
   ids: (number | null)[];
 }
