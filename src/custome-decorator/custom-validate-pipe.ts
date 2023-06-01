@@ -5,7 +5,7 @@ import {
 } from 'class-validator';
 
 export function FixedArraySize(
-  size: number,
+  size: string,
   validationOptions?: ValidationOptions,
 ) {
   return function (object: Record<string, any>, propertyName: string) {
@@ -16,7 +16,10 @@ export function FixedArraySize(
       options: validationOptions,
       validator: {
         validate(value: any[], args: ValidationArguments) {
-          return value.length === size;
+          if (!Array.isArray(value)) {
+            return false;
+          }
+          return value.length === +size;
         },
         defaultMessage(args: ValidationArguments) {
           return `Array size must be exactly ${size}.`;
@@ -37,7 +40,12 @@ export function CheckArrayValueNumberOrNull(
       options: validationOptions,
       validator: {
         validate(value: any[], args: ValidationArguments) {
-          return value.every((v) => typeof v === 'number' || v === null);
+          if (!Array.isArray(value)) {
+            return false;
+          }
+          return value.every(
+            (v) => (typeof v === 'number' && v > 0) || v === null,
+          );
         },
         defaultMessage(args: ValidationArguments) {
           return `Array value must be number or null.`;
