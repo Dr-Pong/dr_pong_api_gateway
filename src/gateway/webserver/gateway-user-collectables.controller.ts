@@ -24,7 +24,6 @@ import {
   PatchUserTitleRequestDto,
 } from './dtos/user-patch-input.dto';
 
-// 요청에 헤더도 포함해서 넘기기
 @Controller('/users')
 export class UserGatewayCollectablesController {
   private readonly logger = new Logger(UserGatewayCollectablesController.name);
