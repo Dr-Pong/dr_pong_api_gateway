@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { DataSource } from 'typeorm';
@@ -19,6 +19,7 @@ describe('RankController', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
     testService = moduleFixture.get<TestService>(TestService);
     dataSources = moduleFixture.get<DataSource>(DataSource);
@@ -47,48 +48,73 @@ describe('RankController', () => {
     await dataSources.synchronize(true);
   });
   describe('ROUTE RANK GET TEST', () => {
-    describe('/ranks/top', () => {
-      it('count 가 ~ 일때', async () => {
+    describe('/ranks/top?count={count}', () => {
+      it('count 인자가 없을때 default로 3 ', async () => {
         const response = await request(app.getHttpServer()).get('/ranks/top');
-        expect(response.statusCode).not.toBe(200);
-        expect(response.body).not.toHaveProperty('nickname');
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('top');
       });
-      it('라우팅 유저 닉네임 있는 경우', async () => {
-        const user: User = await testService.createBasicUser();
+      it('count 인자가 있을때 그 값으로 잘 되나', async () => {
+        const topCount = 2;
         const response = await request(app.getHttpServer()).get(
-          '/users/' + user.nickname + '/detail',
+          '/ranks/top?count=' + topCount,
         );
         expect(response.statusCode).toBe(200);
-        // 인자 확인.
-        expect(response.body).toHaveProperty('nickname');
-        expect(response.body).toHaveProperty('imgUrl');
-        expect(response.body).toHaveProperty('statusMessage');
-        // expect(response.body.nickname).toBe(user.nickname); //원하는 데이터 넣기
-        // expect(response.body.imgUrl).toBe(user.image.url); //원하는 데이터 넣기
-        // expect(response.body.statusMessage).toBe(user.statusMessage); //원하는 데이터 넣기
+        expect(response.body.length).toBe(3);
+      });
+      it('error : count 쿼리 인자가 있는데 최대값 10 이상에 걸릴때 ', async () => {
+        const topCount = 100;
+        const response = await request(app.getHttpServer()).get(
+          '/ranks/top?count=' + topCount,
+        );
+        expect(response.statusCode).toBe(400);
+      });
+      it('error : count 쿼리 인자가 0 이하에 걸릴때 ', async () => {
+        const topCount = -1;
+        const response = await request(app.getHttpServer()).get(
+          '/ranks/top?count=' + topCount,
+        );
+        expect(response.statusCode).toBe(400);
       });
     });
-    describe('/ranks/bottom', () => {
-      it('라우팅 유저 닉에임이 없는 경우', async () => {
+
+    describe('/ranks/bottom?count={count}&offset={offset}', () => {
+      it('count & offset 인자가 없을때 default로 되는경우', async () => {
         const response = await request(app.getHttpServer()).get(
-          '/users/' + 'notExistNickname' + '/detail',
-        );
-        expect(response.statusCode).not.toBe(200);
-        expect(response.body).not.toHaveProperty('nickname');
-      });
-      it('라우팅 유저 닉네임 있는 경우', async () => {
-        const user: User = await testService.createBasicUser();
-        const response = await request(app.getHttpServer()).get(
-          '/users/' + user.nickname + '/detail',
+          '/ranks/bottom',
         );
         expect(response.statusCode).toBe(200);
-        // 인자 확인.
-        expect(response.body).toHaveProperty('nickname');
-        expect(response.body).toHaveProperty('imgUrl');
-        expect(response.body).toHaveProperty('statusMessage');
-        // expect(response.body.nickname).toBe(user.nickname); //원하는 데이터 넣기
-        // expect(response.body.imgUrl).toBe(user.image.url); //원하는 데이터 넣기
-        // expect(response.body.statusMessage).toBe(user.statusMessage); //원하는 데이터 넣기
+        expect(response.body).toHaveProperty('top');
+      });
+      it('offset이 없는경우', async () => {
+        const bottomCount = 10;
+        const response = await request(app.getHttpServer()).get(
+          '/ranks/bottom?count=' + bottomCount,
+        );
+        expect(response.status).toBe(200);
+      });
+      it('count가 없는경우', async () => {
+        const bottomOffset = 10;
+        const response = await request(app.getHttpServer()).get(
+          '/ranks/bottom?' + 'offset=' + bottomOffset,
+        );
+        expect(response.status).toBe(200);
+      });
+      it('error: count 인자가 validate 하지 않은 경우', async () => {
+        const bottomCount = 'a';
+        const response = await request(app.getHttpServer()).get(
+          '/ranks/bottom?' + 'count=' + bottomCount + '&offset=10',
+        );
+        expect(response.status).toBe(400);
+        // expect(response.body.message).toBe('Rank Get Query must be numeric');
+      });
+      it('error: offset 인자가 validate 하지 않은 경우', async () => {
+        const bottomOffset = -1;
+        const response = await request(app.getHttpServer()).get(
+          '/ranks/bottom?' + 'count=12' + '&offset=' + bottomOffset,
+        );
+        expect(response.status).toBe(400);
+        // expect(response.body.message).toBe('input must be greater than 0.');
       });
     });
   });
