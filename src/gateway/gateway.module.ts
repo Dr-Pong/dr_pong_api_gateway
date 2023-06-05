@@ -9,8 +9,8 @@ import { GatewayUserRecordsController } from './webserver/gateway-user-records-c
     GatewayUserCollectablesController,
     GatewayUserDetailController,
     GatewayUserStatRankController,
-    GatewayRankController,
     GatewayUserRecordsController,
+    GatewayRankController,
   ],
 })
 export class GatewayModule {}
