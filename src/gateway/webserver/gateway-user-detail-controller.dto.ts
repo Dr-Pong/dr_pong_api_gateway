@@ -1,9 +1,9 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import axios from 'axios';
 import { UserDetailResponseDto } from './dtos/user-detail-response.dto';
 
 @Controller('users')
-export class UserGatewayDetailController {
+export class GatewayUserDetailController {
   @Get('/:nickname/detail')
   async userDetailByNicknameGet(
     @Param('nickname') nickname: string,

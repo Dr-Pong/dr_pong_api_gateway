@@ -5,7 +5,7 @@ import { QueryValidatePipe } from 'src/validation/custom-query-validate-pipe';
 import { UserGameRecordsResponseDto } from './dtos/user-records-response.dto';
 
 @Controller('users')
-export class GatewayRecordsController {
+export class GatewayUserRecordsController {
   @Get('/:nickname/records')
   async userGameRecordsByNicknameGet(
     @Param('nickname') nickname: string,

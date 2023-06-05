@@ -25,8 +25,8 @@ import {
 } from './dtos/user-patch-input.dto';
 
 @Controller('/users')
-export class UserGatewayCollectablesController {
-  private readonly logger = new Logger(UserGatewayCollectablesController.name);
+export class GatewayUserCollectablesController {
+  private readonly logger = new Logger(GatewayUserCollectablesController.name);
 
   @Get('/:nickname/achievements')
   async userAchievementByNicknameGet(
