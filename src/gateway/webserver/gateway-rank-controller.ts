@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import axios from 'axios';
 import { UserDetailResponseDto } from './dtos/user-detail-response.dto';
-import { RankQueryValidatePipe } from 'src/custom/custom-valid-pipe';
+import { RankQueryValidatePipe } from 'src/validation/custom-rank-query-validate-pipe';
 
 @Controller('ranks')
 export class GatewayRankController {

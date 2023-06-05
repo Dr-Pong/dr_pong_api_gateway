@@ -2,7 +2,7 @@ import { IsPositive, IsString, Length, IsNotEmpty } from 'class-validator';
 import {
   FixedArraySize,
   CheckArrayValueNumberOrNull,
-} from 'src/custom/custom-decorator-validate-pipe';
+} from 'src/validation/custom-decorator-validate';
 
 export class PatchUserTitleRequestDto {
   @IsPositive()
