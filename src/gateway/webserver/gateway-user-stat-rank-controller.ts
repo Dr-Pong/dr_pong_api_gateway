@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import axios from 'axios';
 import { UserGameTotalStatResponseDto } from './dtos/user-game-total-stat-response.dto';
 import { UserGameSeasonStatResponseDto } from './dtos/user-game-season-stat-response.dto';
@@ -6,7 +6,7 @@ import { UserTotalRankResponseDto } from './dtos/user-total-rank-response.dto';
 import { UserSeasonRankResponseDto } from './dtos/user-season-rank-response.dto';
 
 @Controller('users')
-export class UserGatewayStatRankController {
+export class GatewayUserStatRankController {
   @Get('/:nickname/stats/total')
   async userTotalStatByNicknameGet(
     @Param('nickname') nickname: string,

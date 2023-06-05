@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 
 @Injectable()
-export class RankQueryValidatePipe implements PipeTransform {
-  constructor(private maxValue: number, private defaultValue: number) {}
-  private readonly logger: Logger = new Logger(RankQueryValidatePipe.name);
+export class QueryValidatePipe implements PipeTransform {
+  constructor(private defaultValue: number, private maxValue?: number) {}
+  private readonly logger: Logger = new Logger(QueryValidatePipe.name);
 
   transform(value: any, metadata: ArgumentMetadata) {
     // metadata 로 쿼리인지 그 안의 인자 키값인지 확인 가능하지만 밖에서,
@@ -30,7 +30,7 @@ export class RankQueryValidatePipe implements PipeTransform {
         `input must be less than or equal to ${this.maxValue}.`,
       );
     }
-    if (value <= 0) {
+    if (value < 0) {
       throw new BadRequestException('input must be greater than 0.');
     }
   }
