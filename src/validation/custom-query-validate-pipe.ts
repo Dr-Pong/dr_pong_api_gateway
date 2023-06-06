@@ -1,7 +1,6 @@
 import {
   Injectable,
   PipeTransform,
-  ArgumentMetadata,
   BadRequestException,
   Logger,
 } from '@nestjs/common';
@@ -11,9 +10,8 @@ export class QueryValidatePipe implements PipeTransform {
   constructor(private defaultValue: number, private maxValue?: number) {}
   private readonly logger: Logger = new Logger(QueryValidatePipe.name);
 
-  transform(value: any, metadata: ArgumentMetadata) {
-    // metadata 로 쿼리인지 그 안의 인자 키값인지 확인 가능하지만 밖에서,
-    // 내가 넣어주기 때문에 알아서 된다.
+  // 인자로 ArugmentMetadata 를 받아서 쿼리인지, 쿼리 안의 인자 키값인지 확인 가능하다.
+  transform(value: any) {
     value = this.handleDefault(value);
     this.checkValidateNumericInput(value);
     const parsedValue = parseInt(value, 10);

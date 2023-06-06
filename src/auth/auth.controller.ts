@@ -16,6 +16,7 @@ import { JwtDto } from './jwt/jwt.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
   private readonly logger: Logger = new Logger(AuthController.name);
+
   @Post('/42')
   async fortyTwoLogin(@Body('authCode') code: string): Promise<JwtDto> {
     this.logger.log(code);
