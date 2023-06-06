@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Param, Query } from '@nestjs/common';
 import axios from 'axios';
 import { UserDetailResponseDto } from './dtos/user-detail-response.dto';
 import { QueryValidatePipe } from 'src/validation/custom-query-validate-pipe';
@@ -6,6 +6,9 @@ import { UserGameRecordsResponseDto } from './dtos/user-records-response.dto';
 
 @Controller('users')
 export class GatewayUserRecordsController {
+  private readonly logger: Logger = new Logger(
+    GatewayUserRecordsController.name,
+  );
   @Get('/:nickname/records')
   async userGameRecordsByNicknameGet(
     @Param('nickname') nickname: string,

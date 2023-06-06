@@ -5,7 +5,6 @@ import { AppModule } from 'src/app.module';
 import { DataSource } from 'typeorm';
 import { TestService } from 'src/test/test.service';
 import { initializeTransactionalContext } from 'typeorm-transactional';
-import { User } from 'src/auth/user.entity';
 
 describe('RankController', () => {
   let app: INestApplication;
@@ -106,7 +105,6 @@ describe('RankController', () => {
           '/ranks/bottom?' + 'count=' + bottomCount + '&offset=10',
         );
         expect(response.status).toBe(400);
-        // expect(response.body.message).toBe('Rank Get Query must be numeric');
       });
       it('error: offset 인자가 validate 하지 않은 경우', async () => {
         const bottomOffset = -1;
@@ -114,7 +112,6 @@ describe('RankController', () => {
           '/ranks/bottom?' + 'count=12' + '&offset=' + bottomOffset,
         );
         expect(response.status).toBe(400);
-        // expect(response.body.message).toBe('input must be greater than 0.');
       });
     });
   });

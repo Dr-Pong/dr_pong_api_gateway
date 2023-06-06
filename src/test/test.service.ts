@@ -60,7 +60,6 @@ export class TestService {
   }
 
   async createBasicUsers(): Promise<void> {
-    // 해결
     for (let i = 0; i < 10; i++) {
       const user = await this.userRepository.save({
         nickname: 'user' + i.toString(),
