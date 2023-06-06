@@ -26,7 +26,9 @@ import {
 
 @Controller('/users')
 export class GatewayUserCollectablesController {
-  private readonly logger = new Logger(GatewayUserCollectablesController.name);
+  private readonly logger: Logger = new Logger(
+    GatewayUserCollectablesController.name,
+  );
 
   @Get('/:nickname/achievements')
   async userAchievementByNicknameGet(
@@ -87,14 +89,6 @@ export class GatewayUserCollectablesController {
       throw error;
     }
   }
-
-  // @Get('/:nickname/records')
-  // async userGameRecordsByNicknameGet(
-  //   @Param('nickname') nickname: string,
-  //   @Query('coount', new DefaultValuePipe(10), ParseIntPipe) count: number,
-  //   @Query('lastGameId', new DefaultValuePipe(0), ParseIntPipe)
-  //   lastGameId: number,
-  // ): Promise<UserGameRecordsResponseDto> {}
 
   // Patch
   @UseGuards(AuthGuard('jwt'))

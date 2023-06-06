@@ -1,10 +1,11 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Query } from '@nestjs/common';
 import axios from 'axios';
 import { UserDetailResponseDto } from './dtos/user-detail-response.dto';
 import { QueryValidatePipe } from 'src/validation/custom-query-validate-pipe';
 
 @Controller('ranks')
 export class GatewayRankController {
+  private readonly logger: Logger = new Logger(GatewayRankController.name);
   @Get('/top')
   async rankTopGet(
     @Query('count', new QueryValidatePipe(3, 10)) count: number,
