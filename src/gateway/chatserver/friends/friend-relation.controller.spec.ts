@@ -139,7 +139,7 @@ describe('GatewayFriendRelationController', () => {
             Authorization: `Bearer ${token}`,
             withCredentials: true,
           });
-        expect(response.statusCode).toBe(200);
+        expect(response.statusCode).toBe(201);
       });
     });
 
