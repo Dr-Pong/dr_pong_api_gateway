@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, Param, Query } from '@nestjs/common';
 import axios from 'axios';
 import { UserDetailResponseDto } from './dtos/user-detail-response.dto';
-import { QueryValidatePipe } from 'src/validation/custom-query-validate-pipe';
+import { QueryValidatePipe } from 'src/gateway/webserver/validation/custom-query-validate-pipe';
 import { UserGameRecordsResponseDto } from './dtos/user-records-response.dto';
 
 @Controller('users')
