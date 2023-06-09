@@ -7,21 +7,18 @@ import {
   Req,
   Post,
   Delete,
-  DefaultValuePipe,
-  ParseIntPipe,
   Query,
   Body,
 } from '@nestjs/common';
 import axios from 'axios';
 import { AuthGuard } from '@nestjs/passport';
-import { FriendListResponseDto } from '../dtos/friend-list-response.dto';
-import { FriendPendingListResponseDto } from '../dtos/friend-pending-list-response.dto';
 import { FriendDirectMessageChatListResponseDto } from '../dtos/friend-direct-message-chat-list-response.dto';
 import { PostFriendChatRequestDto } from '../dtos/friend-post-chat-request.dto';
 import { FriendDirectMessageRoomListResponseDto } from '../dtos/friend-direct-message-room-list-response.dto';
 import { FriendDirectMessageNewResponseDto } from '../dtos/friend-direct-message-new-response.dto';
+import { QueryValidatePipe } from 'src/gateway/validation/custom-query-validate-pipe';
 
-@Controller('users/friends')
+@Controller('/users/friends')
 export class GatewayFriendChatController {
   private readonly logger: Logger = new Logger(
     GatewayFriendChatController.name,
@@ -31,14 +28,15 @@ export class GatewayFriendChatController {
   @UseGuards(AuthGuard('jwt'))
   async friendChatListGet(
     @Param('nickname') nickname: string,
-    @Query('count', new DefaultValuePipe(40), ParseIntPipe) count: number, // validate pipe 적용
-    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+    @Query('count', new QueryValidatePipe(40, 200)) count: number,
+    @Query('offset', new QueryValidatePipe(0)) offset: number,
     @Req() request,
   ): Promise<FriendDirectMessageChatListResponseDto> {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.get(
-        `/users/friends/${nickname}/chats?count=${count}&offset=${offset}`,
+        process.env.CHATSERVER_URL +
+          `/users/friends/${nickname}/chats?count=${count}&offset=${offset}`,
         {
           headers: { Authorization: accessToken },
         },
@@ -53,7 +51,7 @@ export class GatewayFriendChatController {
   @UseGuards(AuthGuard('jwt'))
   async friendChatPost(
     @Param('nickname') nickname: string,
-    @Body() postFriendChatRequestDto: PostFriendChatRequestDto, // validate @ 적용
+    @Body() postFriendChatRequestDto: PostFriendChatRequestDto,
     @Req() request,
   ): Promise<void> {
     try {
@@ -71,8 +69,6 @@ export class GatewayFriendChatController {
     }
   }
 
-  // 얘는 항상 성공이여서 가드가 필요 없나 ?
-  // 챗 서버에서 @GetUser 안쓰면 굳이 토큰 보내지말자
   @Get('/chatlist')
   @UseGuards(AuthGuard('jwt'))
   async friendDmListGet(
@@ -93,6 +89,7 @@ export class GatewayFriendChatController {
   }
 
   @Delete('/chats/:nickname')
+  @UseGuards(AuthGuard('jwt'))
   async friendDirectMessageDelete(
     @Param('nickname') nickname: string,
     @Req() request,
@@ -112,6 +109,7 @@ export class GatewayFriendChatController {
   }
 
   @Get('/chats/new')
+  @UseGuards(AuthGuard('jwt'))
   async friendDirectMessageNewGet(
     @Req() request,
   ): Promise<FriendDirectMessageNewResponseDto> {

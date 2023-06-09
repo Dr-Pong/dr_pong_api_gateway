@@ -43,14 +43,41 @@ describe('GatewayFriendRelationController', () => {
   });
 
   describe('ROUTE FRIENDS CHAT(DM) TEST', () => {
-    describe('GET /users/friends/:nickname/chats', () => {
+    describe('GET /users/friends/${nickname}/chats?count=${count}&offset=${offset}', () => {
       it('[Error Case] jwt 가드 에 막혔을때', async () => {
         const user = await testService.createBasicUser();
         const token = await testService.giveTokenToUser(user);
+        const count = 10;
+        const offset = 0;
         const response = await request(app.getHttpServer())
-          .get('/users/friends/:nickname/chats')
+          .get(
+            `/users/friends/${user.nickname}/chats?count=${count}&offset=${offset}`,
+          )
           .set({
             Authorization: `no Bearer ${token}`,
+            withCredentials: true,
+          });
+        expect(response.statusCode).toBe(401);
+      });
+      it('[Error Case] validate pipe count max값 에 걸렸을때', async () => {
+        const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
+        const count = 1000;
+        const response = await request(app.getHttpServer())
+          .get(`/users/friends/${user.nickname}/chats?count=${count}`)
+          .set({
+            Authorization: `Bearer ${token}`,
+            withCredentials: true,
+          });
+        expect(response.statusCode).toBe(400);
+      });
+      it('[Valid Case] validate pipe 디폴트값 되나 확인', async () => {
+        const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
+        const response = await request(app.getHttpServer())
+          .get(`/users/friends/${user.nickname}/chats`)
+          .set({
+            Authorization: `Bearer ${token}`,
             withCredentials: true,
           });
         expect(response.statusCode).toBe(401);
@@ -59,7 +86,7 @@ describe('GatewayFriendRelationController', () => {
         const user = await testService.createBasicUser();
         const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .get('/users/friends/:nickname/chats')
+          .get(`/users/friends/${user.nickname}/chats`)
           .set({
             Authorization: `Bearer ${token}`,
             withCredentials: true,
