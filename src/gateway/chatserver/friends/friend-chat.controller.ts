@@ -71,7 +71,7 @@ export class GatewayFriendChatController {
 
   @Get('/chatlist')
   @UseGuards(AuthGuard('jwt'))
-  async friendDmListGet(
+  async friendDirectMessageListGet(
     @Req() request,
   ): Promise<FriendDirectMessageRoomListResponseDto> {
     try {
