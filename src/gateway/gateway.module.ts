@@ -6,6 +6,7 @@ import { GatewayRankController } from './webserver/gateway-rank-controller';
 import { GatewayUserRecordsController } from './webserver/gateway-user-records-controller';
 import { GatewayFriendRelationController } from './chatserver/friends/friend-relation.controller';
 import { GatewayBlockController } from './chatserver/block/block.controller';
+import { GatewayFriendChatController } from './chatserver/friends/friend-chat.controller';
 @Module({
   controllers: [
     // webserver
@@ -17,6 +18,7 @@ import { GatewayBlockController } from './chatserver/block/block.controller';
     // chatserver
     GatewayFriendRelationController,
     GatewayBlockController,
+    GatewayFriendChatController,
   ],
 })
 export class GatewayModule {}
