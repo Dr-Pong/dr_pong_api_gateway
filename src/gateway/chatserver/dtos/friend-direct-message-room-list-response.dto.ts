@@ -1,3 +1,3 @@
 export class FriendDirectMessageRoomListResponseDto {
-  dmList: { nickname: string; imgUrl: string; newChats: number }[];
+  chatList: { nickname: string; imgUrl: string; newChats: number }[];
 }
