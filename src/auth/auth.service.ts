@@ -129,6 +129,7 @@ export class AuthService {
       id: user.id,
       nickname: user.nickname,
       secondAuthRequired: user.secondAuthRequired,
+      roleType: user.roleType, // 남준님 이거 있어야 하지 않나요?
     });
     return token;
   }
@@ -173,5 +174,22 @@ export class AuthService {
     if (user.nickname) responseDto.roleType = ROLETYPE_MEMBER;
 
     return responseDto;
+  }
+
+  // accessToken 을 어떻게 가져올 것인가
+  // 각 서버별로 쏴주는거 response받아서 트렌젝션으로 관리해야하나..? -> 그럼 rolleback은 어떻게 ?
+  @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
+  async requestStoreUserInfoEachServers(user: AuthDto) {
+    // const accessToken = await this.createJwtFromUser(user);
+    // foreach나 for문으로 돌려서 깔끔하게 하기
+    await this.axiosRequestStoreServer(process.env.WEBSERVER_URL, user);
+    await this.axiosRequestStoreServer(process.env.CHATSERVER_URL, user);
+    await this.axiosRequestStoreServer(process.env.GAMESERVER_URL, user);
+  }
+
+  async axiosRequestStoreServer(serverLocation: string, user: AuthDto) {
+    await axios.post(serverLocation + '/store/user', {
+      data: { user: user },
+    });
   }
 }
