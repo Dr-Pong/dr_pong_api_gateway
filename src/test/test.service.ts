@@ -44,7 +44,7 @@ export class TestService {
       email: index.toString() + '@mail.com',
       statusMessage: index.toString(),
       image: this.profileImages[0],
-      roleType: ROLETYPE_MEMBER,
+      // roleType: ROLETYPE_MEMBER,
     });
     this.users.push(user);
     return user;
@@ -55,6 +55,7 @@ export class TestService {
       id: user.id,
       nickname: user.nickname,
       secondAuthRequired: user.secondAuthSecret,
+      roleType: ROLETYPE_MEMBER,
     });
     return token;
   }
