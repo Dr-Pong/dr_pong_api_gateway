@@ -1,3 +1,3 @@
 export class PostChannelJoinRequestDto {
-  password: string;
+  password: string | null;
 }

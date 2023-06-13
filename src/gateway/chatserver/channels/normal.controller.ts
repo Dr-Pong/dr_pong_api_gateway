@@ -19,17 +19,18 @@ import { PostChannelJoinRequestDto } from './dtos/post-channel-join-request.dto'
 import { PostChannelChatRequestDto } from './dtos/post-channel-chat-request.dto';
 import { ChannelMeResponseDto } from './dtos/channel-me-response.dto';
 import { ChannelChatsResponseDto } from './dtos/channel-chat-response.dto';
+import { QueryValidatePipe } from 'src/gateway/validation/custom-query-validate-pipe';
 
 @Controller('/channels')
-export class GatewayChannelAdminController {
+export class GatewayChannelNormalController {
   private readonly logger: Logger = new Logger(
-    GatewayChannelAdminController.name,
+    GatewayChannelNormalController.name,
   );
 
   @Get('/')
   async channelPageGet(
-    @Query('page') page: number,
-    @Query('count') count: number,
+    @Query('page', new QueryValidatePipe(1)) page: number,
+    @Query('count', new QueryValidatePipe(10, 10)) count: number,
     @Query('order') orderBy: 'resent' | 'popular',
     @Query('keyword') keyword: string,
   ): Promise<ChannelPageResponseDto> {
@@ -48,7 +49,7 @@ export class GatewayChannelAdminController {
   @UseGuards(AuthGuard('jwt'))
   async channelParticipantsGet(
     @Req() request,
-    @Query('roomId') channelId: string,
+    @Param('roomId') channelId: string,
   ): Promise<ChannelParticipantsResponseDto> {
     try {
       const accessToken = request.headers.authorization;
@@ -76,7 +77,7 @@ export class GatewayChannelAdminController {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
         process.env.CHATSERVER_URL + `/channels`,
-        { requestDto }, // 볏겨서?
+        requestDto, // 볏겨서?
         {
           headers: {
             Authorization: accessToken,
@@ -100,7 +101,7 @@ export class GatewayChannelAdminController {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
         process.env.CHATSERVER_URL + `/channels/${channelId}/participants`,
-        { requestDto },
+        requestDto,
         {
           headers: {
             Authorization: accessToken,
@@ -231,8 +232,8 @@ export class GatewayChannelAdminController {
   async channelChatsGet(
     @Req() request,
     @Param('roomId') channelId: string,
-    @Query('offset') offset: number,
-    @Query('count') count: number,
+    @Query('offset', new QueryValidatePipe(0)) offset: number,
+    @Query('count', new QueryValidatePipe(40, 200)) count: number,
   ): Promise<ChannelChatsResponseDto> {
     try {
       const accessToken = request.headers.authorization;
