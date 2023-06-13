@@ -9,6 +9,7 @@ import {
   ParseBoolPipe,
   Logger,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import axios from 'axios';
 import { UserAchievementsResponseDto } from './dtos/user-achievements-response.dto';
@@ -23,6 +24,7 @@ import {
   PatchUserMessageRequestDto,
   PatchUserTitleRequestDto,
 } from './dtos/user-patch-input.dto';
+import { UserRelationResponseDto } from './dtos/user-relation.response.dto';
 
 @Controller('/users')
 export class GatewayUserCollectablesController {
@@ -167,6 +169,22 @@ export class GatewayUserCollectablesController {
       await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/emojis`, {
         data: { ids: PatchRequestDto.ids },
       });
+    } catch (error) {
+      throw error.response.data;
+    }
+  }
+
+  @Get('/:nickname/relations/:targetnickname')
+  async getUserRelationByNickname(
+    @Param('nickname') nickname: string,
+    @Param('targetnickname') targetnickname: string,
+  ): Promise<UserRelationResponseDto> {
+    try {
+      const response = await axios.get(
+        process.env.CHATSERVER_URL +
+          `/users/${nickname}/relations/${targetnickname}`,
+      );
+      return response.data;
     } catch (error) {
       throw error.response.data;
     }

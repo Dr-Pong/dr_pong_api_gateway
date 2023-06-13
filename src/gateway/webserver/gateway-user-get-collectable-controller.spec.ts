@@ -110,4 +110,19 @@ describe('GatewayController', () => {
       });
     });
   });
+
+  describe('/users/:nickname/relations/:targetnickname', () => {
+    it('라우팅 성공 했을때', async () => {
+      const response = await request(app.getHttpServer()).get(
+        `/users/user0/relations/user1`,
+      );
+      expect(response.statusCode).toBe(200);
+    });
+    it('서버에서 주는 에러 받기: 없는 닉네임 조회시', async () => {
+      const response = await request(app.getHttpServer()).get(
+        `/users/user0/relations/user_noexist`,
+      );
+      expect(response.statusCode).toBe(400);
+    });
+  });
 });
