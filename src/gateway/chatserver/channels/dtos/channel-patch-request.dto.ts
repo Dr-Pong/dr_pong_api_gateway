@@ -1,10 +1,9 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class ChannelPatchRequestDto {
+  @IsNotEmpty()
   access: 'public' | 'private';
 
-  @IsOptional()
-  @IsString()
   password: string | null;
 
   static default(
