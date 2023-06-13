@@ -28,7 +28,6 @@ export class GatewayChannelAdminController {
   ): Promise<void> {
     try {
       const accessToken: string = request.headers.authorization;
-      console.log(accessToken);
       const response = await axios.patch(
         process.env.CHATSERVER_URL + `/channels/${channelId}`,
         requestDto,

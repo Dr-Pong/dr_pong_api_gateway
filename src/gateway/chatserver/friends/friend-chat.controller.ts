@@ -58,9 +58,9 @@ export class GatewayFriendChatController {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
         process.env.CHATSERVER_URL + `/users/friends/:${nickname}/chats`,
+        { message: postFriendChatRequestDto.message },
         {
           headers: { Authorization: accessToken },
-          data: { message: postFriendChatRequestDto.message },
         },
       );
       return response.data;
