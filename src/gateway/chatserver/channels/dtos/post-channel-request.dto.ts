@@ -4,7 +4,6 @@ export class PostChannelRequestDto {
   @IsNotEmpty()
   title: string;
 
-  @IsNotEmpty()
   access: 'public' | 'private';
 
   password: string | null;

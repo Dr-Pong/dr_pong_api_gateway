@@ -1,7 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
-
 export class ChannelPatchRequestDto {
-  @IsNotEmpty()
   access: 'public' | 'private';
 
   password: string | null;
