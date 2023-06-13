@@ -40,8 +40,8 @@ export class GatewayUserCollectablesController {
   ): Promise<UserAchievementsResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/users/${nickname}/achievements`,
-        { params: { selected } },
+        process.env.WEBSERVER_URI +
+          `/users/${nickname}/achievements?selected=${selected}`,
       );
       return response.data;
     } catch (error) {
@@ -57,8 +57,8 @@ export class GatewayUserCollectablesController {
   ): Promise<UserEmojisResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/users/${nickname}/emojis`,
-        { params: { selected } },
+        process.env.WEBSERVER_URI +
+          `/users/${nickname}/emojis?selected=${selected}`,
       );
       return response.data;
     } catch (error) {
@@ -98,12 +98,15 @@ export class GatewayUserCollectablesController {
   async usersDetailByNicknamePatch(
     @Param('nickname') nickname: string,
     @Body() PatchRequestDto: PatchUserTitleRequestDto,
+    @Req() request,
   ): Promise<void> {
     try {
+      const accessToken = request.headers.authorization;
       await axios.patch(
         process.env.WEBSERVER_URI + `/users/${nickname}/title`,
+        { id: PatchRequestDto.id },
         {
-          data: { id: PatchRequestDto.id },
+          headers: { Authorization: accessToken },
         },
       );
     } catch (error) {
@@ -116,11 +119,17 @@ export class GatewayUserCollectablesController {
   async usersImageByNicknamePatch(
     @Param('nickname') nickname: string,
     @Body() PatchRequestDto: PatchUserImageRequestDto,
+    @Req() request,
   ): Promise<void> {
     try {
-      await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/image`, {
-        data: { id: PatchRequestDto.id },
-      });
+      const accessToken = request.headers.authorization;
+      await axios.patch(
+        process.env.WEBSERVER_URI + `/${nickname}/image`,
+        { id: PatchRequestDto.id },
+        {
+          headers: { Authorization: accessToken },
+        },
+      );
     } catch (error) {
       throw error.response.data;
     }
@@ -131,11 +140,18 @@ export class GatewayUserCollectablesController {
   async usersMessageByNicknamePatch(
     @Param('nickname') nickname: string,
     @Body() PatchRequestDto: PatchUserMessageRequestDto,
+    @Req() request,
   ): Promise<void> {
     try {
-      await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/message`, {
-        data: { message: PatchRequestDto.message },
-      });
+      const accessToken = request.headers.authorization;
+
+      await axios.patch(
+        process.env.WEBSERVER_URI + `/${nickname}/message`,
+        { message: PatchRequestDto.message },
+        {
+          headers: { Authorization: accessToken },
+        },
+      );
     } catch (error) {
       throw error.response.data;
     }
@@ -146,12 +162,14 @@ export class GatewayUserCollectablesController {
   async userAchievementsByNicknamePatch(
     @Param('nickname') nickname: string,
     @Body() PatchRequestDto: PatchUserAchievementsRequestDto,
+    @Req() request,
   ): Promise<void> {
     try {
       await axios.patch(
         process.env.WEBSERVER_URI + `/${nickname}/achievements`,
+        { ids: PatchRequestDto.ids },
         {
-          data: { ids: PatchRequestDto.ids },
+          headers: { Authorization: request.headers.authorization },
         },
       );
     } catch (error) {
@@ -164,11 +182,16 @@ export class GatewayUserCollectablesController {
   async userEmojisByNicknamePatch(
     @Param('nickname') nickname: string,
     @Body() PatchRequestDto: PatchUserEmojisRequestDto,
+    @Req() request,
   ): Promise<void> {
     try {
-      await axios.patch(process.env.WEBSERVER_URI + `/${nickname}/emojis`, {
-        data: { ids: PatchRequestDto.ids },
-      });
+      await axios.patch(
+        process.env.WEBSERVER_URI + `/${nickname}/emojis`,
+        { ids: PatchRequestDto.ids },
+        {
+          headers: { Authorization: request.headers.authorization },
+        },
+      );
     } catch (error) {
       throw error.response.data;
     }
