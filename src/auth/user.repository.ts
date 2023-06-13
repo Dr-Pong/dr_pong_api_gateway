@@ -4,6 +4,8 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { UpdateUserSignUpDto } from './dto/update.user.signup.dto';
 import { CreateUserDto } from './dto/create.user.dto';
+import { AuthDto } from './dto/auth.dto';
+import { ROLETYPE_MEMBER } from './type.user.roletype';
 
 @Injectable()
 export class UserRepository {
@@ -28,10 +30,17 @@ export class UserRepository {
     return await this.repository.save({ email: createDto.email });
   }
 
-  async signUp(updateDto: UpdateUserSignUpDto): Promise<void> {
+  async signUp(updateDto: UpdateUserSignUpDto): Promise<AuthDto> {
     updateDto.user.image = updateDto.profileImage;
     updateDto.user.nickname = updateDto.nickname;
-    await this.repository.save(updateDto.user);
+    const user: User = await this.repository.save(updateDto.user);
+
+    return {
+      id: user.id,
+      nickname: user.nickname,
+      secondAuthRequired: false,
+      roleType: ROLETYPE_MEMBER,
+    };
   }
 
   async updateSecondAuth(user: User, secretKey: string) {
