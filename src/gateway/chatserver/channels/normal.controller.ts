@@ -77,7 +77,7 @@ export class GatewayChannelNormalController {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
         process.env.CHATSERVER_URL + `/channels`,
-        requestDto, // 볏겨서?
+        requestDto,
         {
           headers: {
             Authorization: accessToken,
