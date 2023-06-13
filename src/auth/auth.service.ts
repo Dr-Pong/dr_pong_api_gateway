@@ -93,7 +93,7 @@ export class AuthService {
       profileImage,
       nickname: signUpDto.nickname,
     });
-    this.requestStoreUserInfoEachServers(uploadUser); // 여기에 await 를 붙여야하나?
+    await this.requestStoreUserInfoEachServers(uploadUser);
   }
 
   async getFTAccessToken(authCode: string): Promise<string> {
