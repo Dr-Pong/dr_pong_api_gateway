@@ -21,6 +21,7 @@ import { ROLETYPE_MEMBER, ROLETYPE_NONAME } from './type.user.roletype';
 import { User } from './user.entity';
 import { ProfileImage } from './profile-image.entity';
 import { generateOtpResponseDto } from './dto/auth.generateOtp.response.dto';
+import { postUserDto } from './dto/post.user.dto';
 
 @Injectable()
 export class AuthService {
@@ -81,11 +82,18 @@ export class AuthService {
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
   async signUp(signUpDto: SignUpDto) {
     const { user, profileImage } = await this.validateSignUp(signUpDto);
+    const uploadUser = new postUserDto(
+      user.id,
+      user.nickname,
+      profileImage.id,
+      profileImage.url,
+    );
     await this.userRepository.signUp({
       user,
       profileImage,
       nickname: signUpDto.nickname,
     });
+    this.requestStoreUserInfoEachServers(uploadUser); // 여기에 await 를 붙여야하나?
   }
 
   async getFTAccessToken(authCode: string): Promise<string> {
@@ -176,20 +184,13 @@ export class AuthService {
     return responseDto;
   }
 
-  // accessToken 을 어떻게 가져올 것인가
-  // 각 서버별로 쏴주는거 response받아서 트렌젝션으로 관리해야하나..? -> 그럼 rolleback은 어떻게 ?
-  @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
-  async requestStoreUserInfoEachServers(user: AuthDto) {
-    // const accessToken = await this.createJwtFromUser(user);
-    // foreach나 for문으로 돌려서 깔끔하게 하기
-    await this.axiosRequestStoreServer(process.env.WEBSERVER_URL, user);
-    await this.axiosRequestStoreServer(process.env.CHATSERVER_URL, user);
-    await this.axiosRequestStoreServer(process.env.GAMESERVER_URL, user);
+  async requestStoreUserInfoEachServers(uploadUser: postUserDto) {
+    await this.axiosRequestStoreServer(process.env.WEBSERVER_URL, uploadUser);
+    await this.axiosRequestStoreServer(process.env.CHATSERVER_URL, uploadUser);
+    await this.axiosRequestStoreServer(process.env.GAMESERVER_URL, uploadUser);
   }
 
-  async axiosRequestStoreServer(serverLocation: string, user: AuthDto) {
-    await axios.post(serverLocation + '/store/user', {
-      data: { user: user },
-    });
+  async axiosRequestStoreServer(serverLocation: string, user: postUserDto) {
+    await axios.post(serverLocation + '/store/user', user);
   }
 }

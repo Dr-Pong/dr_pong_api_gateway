@@ -33,7 +33,5 @@ export class AuthController {
       nickname: body.nickname,
       imageId: body.imgId,
     });
-    // 각 서버별로 쏴주는거 requestor 객체 자체
-    this.authService.requestStoreUserInfoEachServers(requestor); // 여기에 await 를 붙여야하나?
   }
 }
