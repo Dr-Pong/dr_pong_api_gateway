@@ -1,7 +1,7 @@
 export class UserDetailResponseDto {
   nickname: string;
 
-  imgUrl: string;
+  image: { id: number; url: string };
 
   level: number;
 
