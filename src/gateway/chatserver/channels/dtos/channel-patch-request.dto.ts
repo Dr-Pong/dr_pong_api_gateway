@@ -1,10 +1,6 @@
-import { IsOptional, IsString } from 'class-validator';
-
 export class ChannelPatchRequestDto {
   access: 'public' | 'private';
 
-  @IsOptional()
-  @IsString()
   password: string | null;
 
   static default(
