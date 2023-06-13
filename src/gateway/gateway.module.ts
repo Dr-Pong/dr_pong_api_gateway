@@ -7,7 +7,10 @@ import { GatewayUserRecordsController } from './webserver/gateway-user-records-c
 import { GatewayFriendRelationController } from './chatserver/friends/friend-relation.controller';
 import { GatewayBlockController } from './chatserver/block/block.controller';
 import { GatewayFriendChatController } from './chatserver/friends/friend-chat.controller';
+import { GatewayChannelAdminController } from './chatserver/channels/admin.controller';
+import { AuthModule } from 'src/auth/auth.module';
 @Module({
+  imports: [AuthModule],
   controllers: [
     // webserver
     GatewayUserCollectablesController,
@@ -19,6 +22,7 @@ import { GatewayFriendChatController } from './chatserver/friends/friend-chat.co
     GatewayFriendRelationController,
     GatewayBlockController,
     GatewayFriendChatController,
+    GatewayChannelAdminController,
   ],
 })
 export class GatewayModule {}
