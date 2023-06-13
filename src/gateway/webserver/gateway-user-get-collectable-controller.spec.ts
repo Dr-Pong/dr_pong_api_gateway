@@ -110,4 +110,13 @@ describe('GatewayController', () => {
       });
     });
   });
+
+  describe('/users/:nickname/relations/:targetnickname', () => {
+    it.only('라우팅 성공 했을때', async () => {
+      const response = await request(app.getHttpServer()).get(
+        `/users/user0/relations/user1`,
+      );
+      expect(response.statusCode).toBe(200);
+    });
+  });
 });
