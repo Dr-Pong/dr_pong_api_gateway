@@ -22,7 +22,6 @@ import { AuthModule } from 'src/auth/auth.module';
     GatewayFriendRelationController,
     GatewayBlockController,
     GatewayFriendChatController,
-    //
     GatewayChannelAdminController,
   ],
 })
