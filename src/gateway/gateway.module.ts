@@ -9,6 +9,7 @@ import { GatewayBlockController } from './chatserver/block/block.controller';
 import { GatewayFriendChatController } from './chatserver/friends/friend-chat.controller';
 import { GatewayChannelAdminController } from './chatserver/channels/admin.controller';
 import { AuthModule } from 'src/auth/auth.module';
+import { GatewayChannelNormalController } from './chatserver/channels/normal.controller';
 @Module({
   imports: [AuthModule],
   controllers: [
@@ -22,8 +23,8 @@ import { AuthModule } from 'src/auth/auth.module';
     GatewayFriendRelationController,
     GatewayBlockController,
     GatewayFriendChatController,
-    //
     GatewayChannelAdminController,
+    GatewayChannelNormalController,
   ],
 })
 export class GatewayModule {}
