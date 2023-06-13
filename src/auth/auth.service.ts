@@ -21,6 +21,7 @@ import { ROLETYPE_MEMBER, ROLETYPE_NONAME } from './type.user.roletype';
 import { User } from './user.entity';
 import { ProfileImage } from './profile-image.entity';
 import { generateOtpResponseDto } from './dto/auth.generateOtp.response.dto';
+import { postUserDto } from './dto/post.user.dto';
 
 @Injectable()
 export class AuthService {
@@ -81,11 +82,18 @@ export class AuthService {
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
   async signUp(signUpDto: SignUpDto) {
     const { user, profileImage } = await this.validateSignUp(signUpDto);
+    const uploadUser = new postUserDto(
+      user.id,
+      user.nickname,
+      profileImage.id,
+      profileImage.url,
+    );
     await this.userRepository.signUp({
       user,
       profileImage,
       nickname: signUpDto.nickname,
     });
+    await this.requestStoreUserInfoEachServers(uploadUser);
   }
 
   async getFTAccessToken(authCode: string): Promise<string> {
@@ -129,6 +137,7 @@ export class AuthService {
       id: user.id,
       nickname: user.nickname,
       secondAuthRequired: user.secondAuthRequired,
+      roleType: user.roleType, // 남준님 이거 있어야 하지 않나요?
     });
     return token;
   }
@@ -173,5 +182,15 @@ export class AuthService {
     if (user.nickname) responseDto.roleType = ROLETYPE_MEMBER;
 
     return responseDto;
+  }
+
+  async requestStoreUserInfoEachServers(uploadUser: postUserDto) {
+    await this.axiosRequestStoreServer(process.env.WEBSERVER_URL, uploadUser);
+    await this.axiosRequestStoreServer(process.env.CHATSERVER_URL, uploadUser);
+    await this.axiosRequestStoreServer(process.env.GAMESERVER_URL, uploadUser);
+  }
+
+  async axiosRequestStoreServer(serverLocation: string, user: postUserDto) {
+    await axios.post(serverLocation + '/users', user);
   }
 }
