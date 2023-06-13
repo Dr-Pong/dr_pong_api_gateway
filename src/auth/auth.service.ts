@@ -191,6 +191,6 @@ export class AuthService {
   }
 
   async axiosRequestStoreServer(serverLocation: string, user: postUserDto) {
-    await axios.post(serverLocation + '/store/user', user);
+    await axios.post(serverLocation + '/users', user);
   }
 }
