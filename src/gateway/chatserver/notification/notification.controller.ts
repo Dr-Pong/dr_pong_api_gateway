@@ -1,4 +1,12 @@
-import { Controller, Logger, UseGuards, Req, Get } from '@nestjs/common';
+import {
+  Controller,
+  Logger,
+  UseGuards,
+  Req,
+  Get,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import axios from 'axios';
 import { AuthGuard } from '@nestjs/passport';
 import { FriendRequestCountResponseDto } from './dtos/friend-request-count-response.dto';
@@ -40,6 +48,28 @@ export class GateWayNotificationController {
       const accessToken = request.headers.authorization;
       const response = await axios.get(
         process.env.CHATSERVER_URL + `/users/notifications/channels`,
+        {
+          headers: {
+            Authorization: accessToken,
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response?.data;
+    }
+  }
+
+  @Delete('/channels/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async channelInvitationDelete(
+    @Req() request,
+    @Param('id') id: string,
+  ): Promise<void> {
+    try {
+      const accessToken = request.headers.authorization;
+      const response = await axios.get(
+        process.env.CHATSERVER_URL + `/users/notifications/channels/${id}`,
         {
           headers: {
             Authorization: accessToken,
