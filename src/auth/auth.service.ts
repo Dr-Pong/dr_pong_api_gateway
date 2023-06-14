@@ -82,17 +82,17 @@ export class AuthService {
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
   async signUp(signUpDto: SignUpDto): Promise<AuthDto> {
     const { user, profileImage } = await this.validateSignUp(signUpDto);
-    const uploadUser = new postUserDto(
-      user.id,
-      user.nickname,
-      profileImage.id,
-      profileImage.url,
-    );
     const signUser: AuthDto = await this.userRepository.signUp({
       user,
       profileImage,
       nickname: signUpDto.nickname,
     });
+    const uploadUser = new postUserDto(
+      signUser.id,
+      signUser.nickname,
+      profileImage.id,
+      profileImage.url,
+    );
     await this.requestStoreUserInfoEachServers(uploadUser);
     return signUser;
   }
@@ -186,9 +186,9 @@ export class AuthService {
   }
 
   async requestStoreUserInfoEachServers(uploadUser: postUserDto) {
-    await this.axiosRequestStoreServer(process.env.WEBSERVER_URL, uploadUser);
+    await this.axiosRequestStoreServer(process.env.WEBSERVER_URI, uploadUser);
     await this.axiosRequestStoreServer(process.env.CHATSERVER_URL, uploadUser);
-    await this.axiosRequestStoreServer(process.env.GAMESERVER_URL, uploadUser);
+    // await this.axiosRequestStoreServer(process.env.GAMESERVER_URL, uploadUser);
   }
 
   async axiosRequestStoreServer(serverLocation: string, user: postUserDto) {
