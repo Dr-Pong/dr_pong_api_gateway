@@ -10,6 +10,7 @@ import { GatewayFriendChatController } from './chatserver/friends/friend-chat.co
 import { GatewayChannelAdminController } from './chatserver/channels/admin.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { GatewayChannelNormalController } from './chatserver/channels/normal.controller';
+import { GateWayNotificationController } from './chatserver/notification/notification.controller';
 @Module({
   imports: [AuthModule],
   controllers: [
@@ -25,6 +26,7 @@ import { GatewayChannelNormalController } from './chatserver/channels/normal.con
     GatewayFriendChatController,
     GatewayChannelAdminController,
     GatewayChannelNormalController,
+    GateWayNotificationController,
   ],
 })
 export class GatewayModule {}
