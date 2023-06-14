@@ -6,7 +6,7 @@ import { JwtDto } from './jwt/jwt.dto';
 import { TokenInterface } from './jwt/jwt.token.interface';
 import { JwtService } from '@nestjs/jwt';
 
-@Controller('')
+@Controller('/auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
@@ -14,7 +14,7 @@ export class AuthController {
   ) {}
   private readonly logger: Logger = new Logger(AuthController.name);
 
-  @Post('/auth/42')
+  @Post('/42')
   async fortyTwoLogin(@Body('authCode') code: string): Promise<JwtDto> {
     this.logger.log(code);
     const accessToken: string = await this.authService.getFTAccessToken(code);
