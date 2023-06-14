@@ -20,6 +20,7 @@ import { PostChannelChatRequestDto } from './dtos/post-channel-chat-request.dto'
 import { ChannelMeResponseDto } from './dtos/channel-me-response.dto';
 import { ChannelChatsResponseDto } from './dtos/channel-chat-response.dto';
 import { QueryValidatePipe } from 'src/gateway/validation/custom-query-validate-pipe';
+import { ChannelIdResponseDto } from './dtos/channel-id-response.dto';
 
 @Controller('/channels')
 export class GatewayChannelNormalController {
@@ -72,7 +73,7 @@ export class GatewayChannelNormalController {
   async channelPost(
     @Req() request,
     @Body() requestDto: PostChannelRequestDto,
-  ): Promise<void> {
+  ): Promise<ChannelIdResponseDto> {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
