@@ -2,6 +2,7 @@ import { Controller, Get, Logger, Query } from '@nestjs/common';
 import axios from 'axios';
 import { UserDetailResponseDto } from './dtos/user-detail-response.dto';
 import { QueryValidatePipe } from 'src/gateway/validation/custom-query-validate-pipe';
+import { UserRankReponseDto } from './dtos/user-rank-response.dto';
 
 @Controller('ranks')
 export class GatewayRankController {
@@ -9,14 +10,14 @@ export class GatewayRankController {
   @Get('/top')
   async rankTopGet(
     @Query('count', new QueryValidatePipe(3, 10)) count: number,
-  ): Promise<UserDetailResponseDto> {
+  ): Promise<UserRankReponseDto> {
     try {
       const response = await axios.get(
         process.env.WEBSERVER_URI + `/ranks/top?count=${count}`,
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error.response?.data;
     }
   }
 
