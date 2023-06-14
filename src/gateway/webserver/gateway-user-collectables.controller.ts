@@ -124,7 +124,7 @@ export class GatewayUserCollectablesController {
     try {
       const accessToken = request.headers.authorization;
       await axios.patch(
-        process.env.WEBSERVER_URI + `/${nickname}/image`,
+        process.env.WEBSERVER_URI + `/users/${nickname}/image`,
         { id: PatchRequestDto.id },
         {
           headers: { Authorization: accessToken },
@@ -146,7 +146,7 @@ export class GatewayUserCollectablesController {
       const accessToken = request.headers.authorization;
 
       await axios.patch(
-        process.env.WEBSERVER_URI + `/${nickname}/message`,
+        process.env.WEBSERVER_URI + `/users/${nickname}/message`,
         { message: PatchRequestDto.message },
         {
           headers: { Authorization: accessToken },
@@ -166,7 +166,7 @@ export class GatewayUserCollectablesController {
   ): Promise<void> {
     try {
       await axios.patch(
-        process.env.WEBSERVER_URI + `/${nickname}/achievements`,
+        process.env.WEBSERVER_URI + `/users/${nickname}/achievements`,
         { ids: PatchRequestDto.ids },
         {
           headers: { Authorization: request.headers.authorization },
@@ -186,7 +186,7 @@ export class GatewayUserCollectablesController {
   ): Promise<void> {
     try {
       await axios.patch(
-        process.env.WEBSERVER_URI + `/${nickname}/emojis`,
+        process.env.WEBSERVER_URI + `/users/${nickname}/emojis`,
         { ids: PatchRequestDto.ids },
         {
           headers: { Authorization: request.headers.authorization },

@@ -85,7 +85,7 @@ export class GatewayFriendRelationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
-        process.env.CHATSERVER_URL + `/users/friends/${nickname}}`,
+        process.env.CHATSERVER_URL + `/users/friends/${nickname}`,
         {},
         {
           headers: { Authorization: accessToken },
@@ -126,7 +126,7 @@ export class GatewayFriendRelationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.delete(
-        process.env.CHATSERVER_URL + `/users/friends/${nickname}}`,
+        process.env.CHATSERVER_URL + `/users/friends/${nickname}`,
         {
           headers: { Authorization: accessToken },
         },
