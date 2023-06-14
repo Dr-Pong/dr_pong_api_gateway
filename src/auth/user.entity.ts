@@ -23,6 +23,6 @@ export class User extends BaseTimeEntity {
   @JoinColumn({ name: 'image_id' })
   image: ProfileImage;
 
-  @Column({ name: 'second_auth_secret', default: null })
+  @Column({ name: 'second_auth_secret', default: false })
   secondAuthSecret: string;
 }
