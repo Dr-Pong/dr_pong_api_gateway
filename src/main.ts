@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { ValidationPipe } from '@nestjs/common';
+
 async function bootstrap() {
   initializeTransactionalContext();
   dotenv.config();

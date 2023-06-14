@@ -23,9 +23,7 @@ export class GatewayUserDetailController {
   @Get('/me')
   async getUserMeDetail(@Req() request) {
     const btoken: string = request.headers.authorization;
-    // console.log(btoken)
     const token = btoken?.split(' ')[1];
-    // console.log(token);
     return await this.authService.getUserMe({ token });
   }
 }
