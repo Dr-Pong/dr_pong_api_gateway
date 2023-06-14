@@ -43,9 +43,9 @@ export class GatewayUserCollectablesController {
         process.env.WEBSERVER_URL +
           `/users/${nickname}/achievements?selected=${selected}`,
       );
-      return response.data;
+      return response?.data;
     } catch (error) {
-      throw error.response.data;
+      throw error.response?.data;
     }
   }
 
