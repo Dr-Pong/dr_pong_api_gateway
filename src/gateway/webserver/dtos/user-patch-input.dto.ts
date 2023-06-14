@@ -32,13 +32,13 @@ export class PatchUserMessageRequestDto {
 }
 
 export class PatchUserAchievementsRequestDto {
-  @FixedArraySize(3)
+  @FixedArraySize(process.env.ACHIEVEMENTS_ARRAY_SIZE)
   @CheckArrayValueNumberOrNull()
   ids: (number | null)[];
 }
 
 export class PatchUserEmojisRequestDto {
-  @FixedArraySize(4)
+  @FixedArraySize(process.env.EMOJI_ARRAY_SIZE)
   @CheckArrayValueNumberOrNull()
   ids: (number | null)[];
 }
