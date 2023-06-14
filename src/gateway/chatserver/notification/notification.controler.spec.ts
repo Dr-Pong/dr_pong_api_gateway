@@ -55,7 +55,7 @@ describe('GatewayChannelAdminController', () => {
           });
         expect(response.statusCode).toBe(401);
       });
-      it('[Valid Case] jwt 가드 에 막혔을때', async () => {
+      it('[Valid Case] 정상 요청', async () => {
         const user = await testService.createBasicUser();
         const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
@@ -67,6 +67,7 @@ describe('GatewayChannelAdminController', () => {
         expect(response.statusCode).toBe(200);
       });
     });
+
     describe('GET /users/notifications/channels', () => {
       it('[Error Case] jwt 가드 에 막혔을때', async () => {
         const user = await testService.createBasicUser();
@@ -79,11 +80,36 @@ describe('GatewayChannelAdminController', () => {
           });
         expect(response.statusCode).toBe(401);
       });
-      it('[Valid Case] jwt 가드 에 막혔을때', async () => {
+      it('[Valid Case] 정상 요청', async () => {
         const user = await testService.createBasicUser();
         const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
           .get(`/users/notifications/channels`)
+          .set({
+            Authorization: `Bearer ${token}`,
+            withCredentials: true,
+          });
+        expect(response.statusCode).toBe(200);
+      });
+    });
+
+    describe('DELETE /users/notifications/channels/:id', () => {
+      it('[Error Case] jwt 가드 에 막혔을때', async () => {
+        const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
+        const response = await request(app.getHttpServer())
+          .delete(`/users/notifications/channels/${user.id}`)
+          .set({
+            Authorization: `no Bearer ${token}`,
+            withCredentials: true,
+          });
+        expect(response.statusCode).toBe(401);
+      });
+      it('[Valid Case] 정상 요청', async () => {
+        const user = await testService.createBasicUser();
+        const token = await testService.giveTokenToUser(user);
+        const response = await request(app.getHttpServer())
+          .delete(`/users/notifications/channels/${user.id}`)
           .set({
             Authorization: `Bearer ${token}`,
             withCredentials: true,
