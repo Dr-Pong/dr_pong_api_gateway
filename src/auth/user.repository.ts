@@ -34,7 +34,6 @@ export class UserRepository {
     updateDto.user.image = updateDto.profileImage;
     updateDto.user.nickname = updateDto.nickname;
     const user: User = await this.repository.save(updateDto.user);
-
     return {
       id: user.id,
       nickname: user.nickname,
