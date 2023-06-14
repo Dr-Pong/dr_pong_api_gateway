@@ -24,6 +24,7 @@ export class AuthController {
     return { accessToken: jwt };
   }
 
+  //TODO: 가드 써서 불필요한 행위 없애기
   @Post('/signup')
   async signUp(@Body() body: SignUpRequestDto, @Req() req): Promise<JwtDto> {
     const token: string = req.headers.authorization?.split(' ')[1];
