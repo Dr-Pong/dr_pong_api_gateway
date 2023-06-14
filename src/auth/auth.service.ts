@@ -80,20 +80,21 @@ export class AuthService {
   }
 
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
-  async signUp(signUpDto: SignUpDto) {
+  async signUp(signUpDto: SignUpDto): Promise<AuthDto> {
     const { user, profileImage } = await this.validateSignUp(signUpDto);
-    const uploadUser = new postUserDto(
-      user.id,
-      user.nickname,
-      profileImage.id,
-      profileImage.url,
-    );
-    await this.userRepository.signUp({
+    const signUser: AuthDto = await this.userRepository.signUp({
       user,
       profileImage,
       nickname: signUpDto.nickname,
     });
+    const uploadUser = new postUserDto(
+      signUser.id,
+      signUser.nickname,
+      profileImage.id,
+      profileImage.url,
+    );
     await this.requestStoreUserInfoEachServers(uploadUser);
+    return signUser;
   }
 
   async getFTAccessToken(authCode: string): Promise<string> {
@@ -118,12 +119,12 @@ export class AuthService {
       headers: { Authorization: 'Bearer ' + accessToken },
     });
     if (response.status !== 200) throw new UnauthorizedException();
-    const email = response.data.email;
+    const email: string = response.data.email;
     const existUser: User = await this.userRepository.findByEmail(email);
 
     let authdto: AuthDto;
     if (!existUser) {
-      const newUser = await this.userRepository.createUser(email);
+      const newUser = await this.userRepository.createUser({ email });
       authdto = AuthDto.defaultUser(newUser.id, null, false, ROLETYPE_NONAME);
     } else {
       authdto = AuthDto.fromNonameUser(existUser);
@@ -137,7 +138,7 @@ export class AuthService {
       id: user.id,
       nickname: user.nickname,
       secondAuthRequired: user.secondAuthRequired,
-      roleType: user.roleType, // 남준님 이거 있어야 하지 않나요?
+      roleType: user.roleType,
     });
     return token;
   }
@@ -185,9 +186,9 @@ export class AuthService {
   }
 
   async requestStoreUserInfoEachServers(uploadUser: postUserDto) {
-    await this.axiosRequestStoreServer(process.env.WEBSERVER_URL, uploadUser);
+    await this.axiosRequestStoreServer(process.env.WEBSERVER_URI, uploadUser);
     await this.axiosRequestStoreServer(process.env.CHATSERVER_URL, uploadUser);
-    await this.axiosRequestStoreServer(process.env.GAMESERVER_URL, uploadUser);
+    // await this.axiosRequestStoreServer(process.env.GAMESERVER_URL, uploadUser);
   }
 
   async axiosRequestStoreServer(serverLocation: string, user: postUserDto) {

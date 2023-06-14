@@ -18,7 +18,7 @@ export class GatewayUserRecordsController {
   ): Promise<UserGameRecordsResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI +
+        process.env.WEBSERVER_URL +
           `/users/${nickname}/records?count=${count}&lastGameId=${lastGameId}`,
       );
       return response.data;
@@ -34,7 +34,7 @@ export class GatewayUserRecordsController {
   ): Promise<UserDetailResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/users/${nickname}/records/${gameId}`,
+        process.env.WEBSERVER_URL + `/users/${nickname}/records/${gameId}`,
       );
       return response.data;
     } catch (error) {

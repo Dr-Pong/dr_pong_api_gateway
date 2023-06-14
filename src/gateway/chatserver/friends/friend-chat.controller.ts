@@ -29,7 +29,7 @@ export class GatewayFriendChatController {
   async friendChatListGet(
     @Param('nickname') nickname: string,
     @Query('count', new QueryValidatePipe(40, 200)) count: number,
-    @Query('offset', new QueryValidatePipe(0)) offset: number,
+    @Query('offset', new QueryValidatePipe(21474836)) offset: number,
     @Req() request,
   ): Promise<FriendDirectMessageChatListResponseDto> {
     try {
@@ -57,7 +57,7 @@ export class GatewayFriendChatController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
-        process.env.CHATSERVER_URL + `/users/friends/:${nickname}/chats`,
+        process.env.CHATSERVER_URL + `/users/friends/${nickname}/chats`,
         { message: postFriendChatRequestDto.message },
         {
           headers: { Authorization: accessToken },

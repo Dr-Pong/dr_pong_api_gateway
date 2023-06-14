@@ -43,6 +43,7 @@ export class GatewayBlockController {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
         process.env.CHATSERVER_URL + `/users/blocks/${nickname}`,
+        {},
         {
           headers: { Authorization: accessToken },
         },

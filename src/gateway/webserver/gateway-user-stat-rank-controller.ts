@@ -17,7 +17,7 @@ export class GatewayUserStatRankController {
   ): Promise<UserGameTotalStatResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/users/${nickname}/stats/total`,
+        process.env.WEBSERVER_URL + `/users/${nickname}/stats/total`,
       );
       return response.data;
     } catch (error) {
@@ -31,7 +31,7 @@ export class GatewayUserStatRankController {
   ): Promise<UserGameSeasonStatResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/users/${nickname}/stats/season`,
+        process.env.WEBSERVER_URL + `/users/${nickname}/stats/season`,
       );
       return response.data;
     } catch (error) {
@@ -45,7 +45,7 @@ export class GatewayUserStatRankController {
   ): Promise<UserTotalRankResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/users/${nickname}/ranks/total`,
+        process.env.WEBSERVER_URL + `/users/${nickname}/ranks/total`,
       );
       return response.data;
     } catch (error) {
@@ -60,7 +60,7 @@ export class GatewayUserStatRankController {
   ): Promise<UserSeasonRankResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/users/${nickname}/ranks/season`,
+        process.env.WEBSERVER_URL + `/users/${nickname}/ranks/season`,
       );
       return response.data;
     } catch (error) {

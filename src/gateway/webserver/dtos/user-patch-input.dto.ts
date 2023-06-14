@@ -1,11 +1,19 @@
-import { IsPositive, IsString, Length, IsNotEmpty } from 'class-validator';
+import {
+  IsPositive,
+  IsString,
+  Length,
+  IsNotEmpty,
+  IsInt,
+  Min,
+} from 'class-validator';
 import {
   FixedArraySize,
   CheckArrayValueNumberOrNull,
 } from 'src/gateway/validation/custom-decorator-validate';
 
 export class PatchUserTitleRequestDto {
-  @IsPositive()
+  @IsInt()
+  @Min(0)
   id: number;
 }
 
@@ -30,7 +38,7 @@ export class PatchUserAchievementsRequestDto {
 }
 
 export class PatchUserEmojisRequestDto {
-  @FixedArraySize(process.env.EMOJIS_ARRAY_SIZE)
+  @FixedArraySize(process.env.EMOJI_ARRAY_SIZE)
   @CheckArrayValueNumberOrNull()
   ids: (number | null)[];
 }

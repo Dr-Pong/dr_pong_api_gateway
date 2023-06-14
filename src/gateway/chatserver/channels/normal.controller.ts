@@ -194,7 +194,7 @@ export class GatewayChannelNormalController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
-        process.env.CHATSERVER_URL + `/channels/${channelId}/chat`,
+        process.env.CHATSERVER_URL + `/channels/${channelId}/chats`,
         requestDto,
         {
           headers: {
@@ -221,7 +221,7 @@ export class GatewayChannelNormalController {
           },
         },
       );
-      return response.data;
+      return response?.data;
     } catch (error) {
       throw error.response.data;
     }
@@ -232,7 +232,7 @@ export class GatewayChannelNormalController {
   async channelChatsGet(
     @Req() request,
     @Param('roomId') channelId: string,
-    @Query('offset', new QueryValidatePipe(0)) offset: number,
+    @Query('offset', new QueryValidatePipe(21474836)) offset: number,
     @Query('count', new QueryValidatePipe(40, 200)) count: number,
   ): Promise<ChannelChatsResponseDto> {
     try {

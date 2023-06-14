@@ -1,7 +1,9 @@
 import { registerDecorator, ValidationOptions } from 'class-validator';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export function FixedArraySize(
-  size: string,
+  size: number | string,
   validationOptions?: ValidationOptions,
 ) {
   return function (object: Record<string, any>, propertyName: string) {

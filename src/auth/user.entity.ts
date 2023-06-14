@@ -16,13 +16,13 @@ export class User extends BaseTimeEntity {
   @Column({ name: 'e_mail', nullable: false })
   email: string;
 
-  @Column({ name: 'nickname', default: '' })
+  @Column({ name: 'nickname', default: null })
   nickname: string;
 
   @ManyToOne(() => ProfileImage, { eager: true })
   @JoinColumn({ name: 'image_id' })
   image: ProfileImage;
 
-  @Column({ name: 'second_auth_secret', default: null })
+  @Column({ name: 'second_auth_secret', default: false })
   secondAuthSecret: string;
 }

@@ -1,7 +1,8 @@
 import { Controller, Get, Logger, Query } from '@nestjs/common';
 import axios from 'axios';
-import { UserDetailResponseDto } from './dtos/user-detail-response.dto';
 import { QueryValidatePipe } from 'src/gateway/validation/custom-query-validate-pipe';
+import { RanksBottomResponseDto } from './dtos/user-rank-bottom-respose.dto';
+import { RanksTopReponseDto } from './dtos/user-rank-response.dto';
 
 @Controller('ranks')
 export class GatewayRankController {
@@ -9,14 +10,14 @@ export class GatewayRankController {
   @Get('/top')
   async rankTopGet(
     @Query('count', new QueryValidatePipe(3, 10)) count: number,
-  ): Promise<UserDetailResponseDto> {
+  ): Promise<RanksTopReponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/ranks/top?count=${count}`,
+        process.env.WEBSERVER_URL + `/ranks/top?count=${count}`,
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error.response?.data;
     }
   }
 
@@ -24,10 +25,10 @@ export class GatewayRankController {
   async rankBottomGet(
     @Query('count', new QueryValidatePipe(197, 300)) count: number,
     @Query('offset', new QueryValidatePipe(4, 300)) offset: number,
-  ): Promise<UserDetailResponseDto> {
+  ): Promise<RanksBottomResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI +
+        process.env.WEBSERVER_URL +
           `/ranks/bottom?count=${count}&offset=${offset}`,
       );
       return response.data;
