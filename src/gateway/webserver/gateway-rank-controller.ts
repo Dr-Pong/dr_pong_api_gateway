@@ -13,7 +13,7 @@ export class GatewayRankController {
   ): Promise<UserRankReponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/ranks/top?count=${count}`,
+        process.env.WEBSERVER_URL + `/ranks/top?count=${count}`,
       );
       return response.data;
     } catch (error) {
@@ -28,7 +28,7 @@ export class GatewayRankController {
   ): Promise<UserDetailResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI +
+        process.env.WEBSERVER_URL +
           `/ranks/bottom?count=${count}&offset=${offset}`,
       );
       return response.data;

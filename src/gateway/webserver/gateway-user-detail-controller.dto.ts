@@ -13,7 +13,7 @@ export class GatewayUserDetailController {
   ): Promise<UserDetailResponseDto> {
     try {
       const response = await axios.get(
-        process.env.WEBSERVER_URI + `/users/${nickname}/detail`,
+        process.env.WEBSERVER_URL + `/users/${nickname}/detail`,
       );
       return response.data;
     } catch (error) {
