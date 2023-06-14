@@ -186,7 +186,7 @@ export class AuthService {
   }
 
   async requestStoreUserInfoEachServers(uploadUser: postUserDto) {
-    await this.axiosRequestStoreServer(process.env.WEBSERVER_URI, uploadUser);
+    await this.axiosRequestStoreServer(process.env.WEBSERVER_URL, uploadUser);
     await this.axiosRequestStoreServer(process.env.CHATSERVER_URL, uploadUser);
     // await this.axiosRequestStoreServer(process.env.GAMESERVER_URL, uploadUser);
   }
