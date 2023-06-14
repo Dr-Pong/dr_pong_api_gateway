@@ -6,7 +6,7 @@ import { JwtDto } from './jwt/jwt.dto';
 import { TokenInterface } from './jwt/jwt.token.interface';
 import { JwtService } from '@nestjs/jwt';
 
-@Controller('/auth')
+@Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
