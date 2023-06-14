@@ -1,4 +1,4 @@
-export class UserRankReponseDto {
+export class RanksTopReponseDto {
   top: {
     rank: number;
     nickname: string;
