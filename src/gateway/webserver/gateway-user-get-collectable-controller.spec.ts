@@ -100,7 +100,7 @@ describe('GatewayController', () => {
         expect(response.body).toHaveProperty('titles');
       });
     });
-    // 현재 web-server에 이 함수 없음 컨트롤러만
+
     describe('/users/images', () => {
       it('라우팅 성공 했을때', async () => {
         const response = await request(app.getHttpServer()).get(
