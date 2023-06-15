@@ -12,13 +12,13 @@ import { authenticator } from 'otplib';
 import { toDataURL } from 'qrcode';
 import { SignUpDto } from './dto/auth.signup.dto';
 import { IsolationLevel, Transactional } from 'typeorm-transactional';
-import { UserRepository } from './user.repository';
+import { UserRepository } from '../user/user.repository';
 import { ProfileImageRepository } from './profile-image.repository';
 import { UserMeDto } from './dto/user.me.dto';
 import { TokenInterface } from './jwt/jwt.token.interface';
 import { GetUserMeDto } from './dto/get.user.me.dto';
-import { ROLETYPE_MEMBER, ROLETYPE_NONAME } from './type.user.roletype';
-import { User } from './user.entity';
+import { ROLETYPE_MEMBER, ROLETYPE_NONAME } from '../user/type.user.roletype';
+import { User } from '../user/user.entity';
 import { ProfileImage } from './profile-image.entity';
 import { generateOtpResponseDto } from './dto/auth.generateOtp.response.dto';
 import { postUserDto } from './dto/post.user.dto';
@@ -28,7 +28,7 @@ export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly imageRepository: ProfileImageRepository,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
   ) {}
   private readonly logger: Logger = new Logger(AuthService.name);
   secondAuth: Map<number, string> = new Map();

@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt/auth.jwt.strategy';
-import { UserRepository } from './user.repository';
+import { UserRepository } from '../user/user.repository';
 import { ProfileImageRepository } from './profile-image.repository';
-import { User } from './user.entity';
+import { User } from '../user/user.entity';
 import { ProfileImage } from './profile-image.entity';
 
 @Module({

@@ -8,7 +8,8 @@ import {
   addTransactionalDataSource,
   initializeTransactionalContext,
 } from 'typeorm-transactional';
-import { User } from 'src/auth/user.entity';
+import { User } from 'src/user/user.entity';
+
 describe('GatewayController', () => {
   let app: INestApplication;
   let testService: TestService;

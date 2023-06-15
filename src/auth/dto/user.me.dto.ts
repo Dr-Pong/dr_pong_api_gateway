@@ -1,6 +1,6 @@
-import { RoleType } from '../type.user.roletype';
-import { ROLETYPE_GUEST, ROLETYPE_NONAME } from '../type.user.roletype';
-import { User } from '../user.entity';
+import { RoleType } from '../../user/type.user.roletype';
+import { ROLETYPE_GUEST, ROLETYPE_NONAME } from '../../user/type.user.roletype';
+import { User } from '../../user/user.entity';
 
 export class UserMeDto {
   nickname: string;

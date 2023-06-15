@@ -1,6 +1,6 @@
-import { RoleType } from '../type.user.roletype';
-import { User } from '../user.entity';
-import { ROLETYPE_NONAME } from '../type.user.roletype';
+import { RoleType } from '../../user/type.user.roletype';
+import { User } from '../../user/user.entity';
+import { ROLETYPE_NONAME } from '../../user/type.user.roletype';
 export class AuthDto {
   id: number;
   nickname: string;

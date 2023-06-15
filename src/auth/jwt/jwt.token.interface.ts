@@ -1,4 +1,4 @@
-import { RoleType } from '../type.user.roletype';
+import { RoleType } from '../../user/type.user.roletype';
 
 export class TokenInterface {
   id: number;

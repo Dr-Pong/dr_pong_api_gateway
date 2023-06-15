@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { User } from '../user.entity';
+import { User } from '../../user/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { AuthModule } from '../auth.module';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
@@ -7,7 +7,7 @@ import {
   ROLETYPE_MEMBER,
   ROLETYPE_NONAME,
   ROLETYPE_GUEST,
-} from '../type.user.roletype';
+} from '../../user/type.user.roletype';
 import { JwtStrategy } from './auth.jwt.strategy';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
