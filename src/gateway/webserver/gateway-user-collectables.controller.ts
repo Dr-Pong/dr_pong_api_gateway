@@ -115,27 +115,6 @@ export class GatewayUserCollectablesController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Patch('/:nickname/image')
-  async usersImageByNicknamePatch(
-    @Param('nickname') nickname: string,
-    @Body() PatchRequestDto: PatchUserImageRequestDto,
-    @Req() request,
-  ): Promise<void> {
-    try {
-      const accessToken = request.headers.authorization;
-      await axios.patch(
-        process.env.WEBSERVER_URL + `/users/${nickname}/image`,
-        { id: PatchRequestDto.id },
-        {
-          headers: { Authorization: accessToken },
-        },
-      );
-    } catch (error) {
-      throw error.response.data;
-    }
-  }
-
-  @UseGuards(AuthGuard('jwt'))
   @Patch('/:nickname/message')
   async usersMessageByNicknamePatch(
     @Param('nickname') nickname: string,
