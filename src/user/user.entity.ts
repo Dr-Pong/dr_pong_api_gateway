@@ -5,8 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BaseTimeEntity } from './utils/base-time.entity';
-import { ProfileImage } from './profile-image.entity';
+import { BaseTimeEntity } from '../auth/utils/base-time.entity';
+import { ProfileImage } from '../auth/profile-image.entity';
 
 @Entity()
 export class User extends BaseTimeEntity {

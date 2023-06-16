@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import { UpdateUserSignUpDto } from './dto/update.user.signup.dto';
-import { CreateUserDto } from './dto/create.user.dto';
-import { AuthDto } from './dto/auth.dto';
+import { UpdateUserSignUpDto } from '../auth/dto/update.user.signup.dto';
+import { CreateUserDto } from '../auth/dto/create.user.dto';
+import { AuthDto } from '../auth/dto/auth.dto';
 import { ROLETYPE_MEMBER } from './type.user.roletype';
+import { ProfileImage } from '../auth/profile-image.entity';
 
 @Injectable()
 export class UserRepository {
@@ -29,7 +30,9 @@ export class UserRepository {
   async createUser(createDto: CreateUserDto): Promise<User> {
     return await this.repository.save({ email: createDto.email });
   }
-
+  async updateUserImage(userId: number, image: ProfileImage): Promise<void> {
+    await this.repository.update(userId, { image: image });
+  }
   async signUp(updateDto: UpdateUserSignUpDto): Promise<AuthDto> {
     updateDto.user.image = updateDto.profileImage;
     updateDto.user.nickname = updateDto.nickname;

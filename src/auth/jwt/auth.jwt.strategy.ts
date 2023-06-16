@@ -3,8 +3,11 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthDto } from '../dto/auth.dto';
 import { TokenInterface } from './jwt.token.interface';
-import { UserRepository } from '../user.repository';
-import { ROLETYPE_MEMBER, ROLETYPE_NONAME } from '../type.user.roletype';
+import { UserRepository } from '../../user/user.repository';
+import {
+  ROLETYPE_MEMBER,
+  ROLETYPE_NONAME,
+} from '../../user/type.user.roletype';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

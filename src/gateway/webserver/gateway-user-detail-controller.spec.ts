@@ -5,7 +5,7 @@ import { AppModule } from 'src/app.module';
 import { DataSource } from 'typeorm';
 import { TestService } from 'src/test/test.service';
 import { initializeTransactionalContext } from 'typeorm-transactional';
-import { User } from 'src/auth/user.entity';
+import { User } from 'src/user/user.entity';
 
 describe('UserController', () => {
   let app: INestApplication;
@@ -61,13 +61,9 @@ describe('UserController', () => {
           '/users/' + user.nickname + '/detail',
         );
         expect(response.statusCode).toBe(200);
-        // 인자 확인.
         expect(response.body).toHaveProperty('nickname');
         expect(response.body).toHaveProperty('imgUrl');
         expect(response.body).toHaveProperty('statusMessage');
-        // expect(response.body.nickname).toBe(user.nickname); //원하는 데이터 넣기
-        // expect(response.body.imgUrl).toBe(user.image.url); //원하는 데이터 넣기
-        // expect(response.body.statusMessage).toBe(user.statusMessage); //원하는 데이터 넣기
       });
     });
   });

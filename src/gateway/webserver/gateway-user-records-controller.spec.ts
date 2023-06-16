@@ -5,7 +5,7 @@ import { AppModule } from 'src/app.module';
 import { DataSource } from 'typeorm';
 import { TestService } from 'src/test/test.service';
 import { initializeTransactionalContext } from 'typeorm-transactional';
-import { User } from 'src/auth/user.entity';
+import { User } from 'src/user/user.entity';
 
 describe('RecordsController', () => {
   let app: INestApplication;

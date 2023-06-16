@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ROLETYPE_MEMBER } from 'src/auth/type.user.roletype';
+import { ROLETYPE_MEMBER } from 'src/user/type.user.roletype';
 import { ProfileImage } from 'src/auth/profile-image.entity';
-import { User } from 'src/auth/user.entity';
+import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 
