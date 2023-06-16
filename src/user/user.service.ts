@@ -33,28 +33,15 @@ export class UserService {
     accessToken: string,
     patchDto: PatchUserImageDto,
   ) {
-    await this.axiosPatchRequestEachServer(
-      nickname,
-      accessToken,
-      process.env.WEBSERVER_URL,
-      patchDto,
+    await axios.patch(
+      process.env.WEBSERVER_URL + `/users/${nickname}/image`,
+      { id: patchDto.imgId },
+      {
+        headers: { Authorization: accessToken },
+      },
     );
-    await this.axiosPatchRequestEachServer(
-      nickname,
-      accessToken,
-      process.env.CHATSERVER_URL,
-      patchDto,
-    );
-  }
-
-  async axiosPatchRequestEachServer(
-    nickname: string,
-    accessToken: string,
-    serverLocation: string,
-    patchDto: PatchUserImageDto,
-  ) {
-    await axios.post(
-      serverLocation + `/users/${nickname}/image`,
+    await axios.patch(
+      process.env.CHATSERVER_URL + `/users/${nickname}/image`,
       { id: patchDto.imgId },
       {
         headers: { Authorization: accessToken },
