@@ -9,6 +9,7 @@ import { typeORMConfig } from './configs/typeorm.configs';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { UserModule } from './user/user.module';
+import { LoggerModule } from 'log/logger.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { UserModule } from './user/user.module';
       },
       async dataSourceFactory(options) {
         if (!options) {
-          throw new Error('Invalid options passed');
+          throw new Error('Invalid options passed'); 
         }
         return addTransactionalDataSource({
           dataSource: new DataSource(options),
@@ -26,9 +27,10 @@ import { UserModule } from './user/user.module';
       },
     }),
     GatewayModule,
-    TestModule,
+    TestModule, //얘 빼야함 테스트모듈 만들때만 쓰게
     AuthModule,
     UserModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
