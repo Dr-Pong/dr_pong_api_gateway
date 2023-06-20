@@ -10,6 +10,8 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { UserModule } from './user/user.module';
 import { LoggerModule } from 'log/logger.module';
+import { ProfileImageRepository } from './auth/profile-image.repository';
+import { ProfileImage } from './auth/profile-image.entity';
 
 @Module({
   imports: [
@@ -31,8 +33,9 @@ import { LoggerModule } from 'log/logger.module';
     AuthModule,
     UserModule,
     LoggerModule,
+    TypeOrmModule.forFeature([ProfileImage]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ProfileImageRepository],
 })
 export class AppModule {}

@@ -5,4 +5,5 @@ export class UpdateUserSignUpDto {
   user: User;
   profileImage: ProfileImage;
   nickname: string;
+  secondAuthRequierd: boolean;
 }

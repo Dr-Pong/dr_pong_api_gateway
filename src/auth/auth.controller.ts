@@ -1,17 +1,15 @@
-import { Body, Controller, Logger, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { SignUpRequestDto } from './dto/auth.signup.request.dto';
 import { JwtDto } from './jwt/jwt.dto';
-import { TokenInterface } from './jwt/jwt.token.interface';
-import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from '@nestjs/passport';
+import { Requestor } from './jwt/auth.requestor.decorator';
+import { UserIdCardDto } from './jwt/auth.user.id-card.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private authService: AuthService) {}
   private readonly logger: Logger = new Logger(AuthController.name);
 
   @Post('/42')
@@ -24,12 +22,13 @@ export class AuthController {
     return { accessToken: jwt };
   }
 
-  //TODO: 가드 써서 불필요한 행위 없애기
   @Post('/signup')
-  async signUp(@Body() body: SignUpRequestDto, @Req() req): Promise<JwtDto> {
-    const token: string = req.headers.authorization?.split(' ')[1];
-    const user: TokenInterface = await this.jwtService.verify(token);
-    const userId: number = user.id;
+  @UseGuards(AuthGuard('jwtNoname'))
+  async signUp(
+    @Body() body: SignUpRequestDto,
+    @Requestor() requestor: UserIdCardDto,
+  ): Promise<JwtDto> {
+    const userId: number = requestor.id;
     const signedUser: AuthDto = await this.authService.signUp({
       userId,
       nickname: body.nickname,
