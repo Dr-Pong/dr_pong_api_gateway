@@ -86,6 +86,7 @@ export class AuthService {
       user,
       profileImage,
       nickname: signUpDto.nickname,
+      secondAuthRequierd: false,
     });
     const uploadUser = new postUserDto(
       signUser.id,
@@ -137,7 +138,7 @@ export class AuthService {
     const token = this.jwtService.sign({
       id: user.id,
       nickname: user.nickname,
-      secondAuthRequired: user.secondAuthRequired,
+      secondAuthRequired: user.secondAuthRequired ?? false,
       roleType: user.roleType,
     });
     return token;
