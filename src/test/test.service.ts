@@ -49,6 +49,18 @@ export class TestService {
     return user;
   }
 
+  async createNonameUser(): Promise<User> {
+    const index: number = this.users.length;
+    const user = await this.userRepository.save({
+      nickname: null,
+      email: index.toString() + '@mail.com',
+      statusMessage: index.toString(),
+      image: this.profileImages[0],
+    });
+    this.users.push(user);
+    return user;
+  }
+
   async giveTokenToUser(user: User) {
     const token = this.jwtService.sign({
       id: user.id,
