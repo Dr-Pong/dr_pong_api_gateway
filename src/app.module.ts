@@ -9,9 +9,11 @@ import { typeORMConfig } from './configs/typeorm.configs';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { UserModule } from './user/user.module';
-import { LoggerModule } from 'log/logger.module';
+import { PongLoggerModule } from 'log/logger.module';
 import { ProfileImageRepository } from './auth/profile-image.repository';
 import { ProfileImage } from './auth/profile-image.entity';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from 'log/log.interceptor';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { ProfileImage } from './auth/profile-image.entity';
       },
       async dataSourceFactory(options) {
         if (!options) {
-          throw new Error('Invalid options passed'); 
+          throw new Error('Invalid options passed');
         }
         return addTransactionalDataSource({
           dataSource: new DataSource(options),
@@ -30,12 +32,19 @@ import { ProfileImage } from './auth/profile-image.entity';
     }),
     GatewayModule,
     TestModule, //얘 빼야함 테스트모듈 만들때만 쓰게
+    PongLoggerModule,
     AuthModule,
     UserModule,
-    LoggerModule,
     TypeOrmModule.forFeature([ProfileImage]),
   ],
   controllers: [AppController],
-  providers: [AppService, ProfileImageRepository],
+  providers: [
+    AppService,
+    ProfileImageRepository,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
 export class AppModule {}
