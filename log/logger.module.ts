@@ -1,15 +1,14 @@
 import { Module } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
-import { winstonConfig } from './winston.configs';
+import { LogWinstonConfig } from './winston.configs';
 
 @Module({
   imports: [
     WinstonModule.forRootAsync({
-      // Configure the Winston logger
       useFactory() {
-        return winstonConfig;
+        return LogWinstonConfig;
       },
     }),
   ],
 })
-export class LoggerModule {}
+export class PongLoggerModule {}
