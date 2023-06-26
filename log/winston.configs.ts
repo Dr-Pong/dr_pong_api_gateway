@@ -1,148 +1,104 @@
-import { WinstonModuleOptions, utilities } from 'nest-winston';
+import { WinstonModuleOptions } from 'nest-winston';
+import * as DailyRotateFile from 'winston-daily-rotate-file';
 import * as winston from 'winston';
 
-const logMessageFormatter = ({ level, message, label, timestamp, meta }) => {
-  const ip =
-    meta?.request?.ip ||
-    meta?.request?.headers['x-forwarded-for'] ||
-    meta?.request?.connection.remoteAddress;
-  //   const logMessage = `${timestamp} [${label}] ${level}: ${message}`;
-  if (ip) {
-    return `${timestamp} [${ip}] : [${label}] ${level}: ${message}`;
-  }
-  return `${timestamp} [${label}] ${level}: ${message}`;
+const logFormatter = ({
+  level,
+  message,
+  context,
+  label,
+  timestamp,
+  metadata,
+}) => {
+  if (metadata.return)
+    return `[${metadata.ip}]  ${
+      metadata.type
+    } ${timestamp}     ${label} [Class : ${metadata.ClassName}] [Function : ${
+      metadata.FunctionName
+    }] ${message} ${JSON.stringify(metadata.return)}`;
+  return `[${metadata.ip}]  ${
+    metadata.type
+  } ${timestamp}     ${label} [Class : ${metadata.ClassName}] [Function : ${
+    metadata.FunctionName
+  }] ${message} ${metadata.originalUrl} ${metadata.method}  ${JSON.stringify(
+    metadata.requestInfo,
+  )}`;
 };
 
-export const winstonConfig: WinstonModuleOptions = {
+const errorMessageFormatter = ({
+  level,
+  message,
+  context,
+  label,
+  timestamp,
+  metadata,
+}) => {
+  const {
+    ip,
+    type,
+    ClassName,
+    FunctionName,
+    errorMessage,
+    stackTrace,
+    user,
+    serverVersion,
+    os,
+    hostname,
+  } = metadata;
+  return `[${ip}] ${type} ${timestamp} ${label} [Class: ${ClassName}] [Function: ${FunctionName}] ${errorMessage} ${stackTrace}`;
+};
+
+export const LogWinstonConfig: WinstonModuleOptions = {
   levels: {
     error: 0,
-    webserver_error: 1,
-    gameserver_error: 2,
-    chatserver_error: 3,
-    warn: 4,
-    info: 5,
-    debug: 6,
-    silly: 7,
+    warn: 1,
+    info: 2,
+    debug: 3,
+    silly: 4,
   },
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    // winston.format.label({ label: 'Default' }),
-    // utilities.format.nestLike('Dr_pong', { prettyPrint: true }),
-    winston.format.colorize({
-      all: true,
-      colors: {
-        error: 'red',
-        warn: 'yellow',
-        info: 'green',
-        debug: 'blue',
-      },
-    }),
-
-    winston.format.printf(({ level, message, label, timestamp, meta }) => {
-      const ip =
-        meta?.request?.ip ||
-        meta?.request?.headers['x-forwarded-for'] ||
-        meta?.request?.connection.remoteAddress;
-      return `${timestamp} [${label}] ${level}: ${message} IP: ${ip}`;
-    }),
-    // utilities.format.nestLike('Dr_pong', { prettyPrint: true }),
-  ),
   transports: [
-    new winston.transports.File({
-      filename: 'booting.log',
-      dirname: 'log', // Optional, if you want to specify the folder for logs
-      //   level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
-      level: 'silly', // or your desired level
-      format: winston.format.combine(
-        winston.format.label({ label: 'BOOT' }),
-        winston.format.timestamp(),
-        winston.format.printf(logMessageFormatter),
-      ),
-    }),
-    new winston.transports.File({
-      filename: 'webserver.log',
-      dirname: 'log/webserver',
-      silent: true,
-      level: 'debug',
-      format: winston.format.combine(
-        winston.format.label({ label: 'WEBSERVER' }),
-        winston.format.timestamp(),
-        winston.format.printf(logMessageFormatter),
-      ),
-    }),
-    new winston.transports.File({
-      filename: 'gameserver.log',
-      dirname: 'log/gameserver',
-      silent: true,
-      level: 'debug',
-      format: winston.format.combine(
-        winston.format.label({ label: 'GAMESERVER' }),
-        winston.format.timestamp(),
-        winston.format.printf(logMessageFormatter),
-      ),
-    }),
-    new winston.transports.File({
-      filename: 'chatserver.log',
-      dirname: 'log/chatserver',
-      silent: true,
-      level: 's',
-      format: winston.format.combine(
-        winston.format.label({ label: 'CHATSERVER' }),
-        winston.format.timestamp(),
-        winston.format.printf(logMessageFormatter),
-      ),
-    }),
-    // new winston.transports.File({
-    //   filename: 'footstep.log',
-    //   dirname: 'log',
-    //   level: 'info', // or your desired level for routing logs
-    //   silent: true,
-    //   format: winston.format.combine(
-    //     // winston.format.timestamp(),
-    //     winston.format.label({ label: 'FOOTSTEP' }),
-    //     utilities.format.nestLike('FOOTSTEP', { prettyPrint: true }),
-    //   ),
-    // }),
-    new winston.transports.File({
-      filename: 'error.log',
+    new DailyRotateFile({
       dirname: 'log',
-      level: 'error', // or your desired level for error logs
+      filename: '%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      maxSize: '20m',
+      maxFiles: '14d',
       format: winston.format.combine(
-        // winston.format.timestamp(),
-        utilities.format.nestLike('ERROR', { prettyPrint: true }),
+        winston.format.metadata(),
+        winston.format.label({ label: 'LOG' }),
+        winston.format.timestamp(),
+        winston.format.printf(logFormatter),
       ),
     }),
-    new winston.transports.File({
-      filename: 'chatserver_error.log',
-      dirname: 'log/chatserver',
-      level: 'chatserver_error',
-    //   silent: true,
+    new DailyRotateFile({
+      dirname: 'log',
+      filename: '%DATE%_error.log',
+      datePattern: 'YYYY-MM-DD',
+      maxSize: '20m',
+      maxFiles: '14d',
+      level: 'error',
       format: winston.format.combine(
-        winston.format.label({ label: 'CHATSERVER_ERROR' }),
+        winston.format.metadata(),
+        winston.format.errors({ stack: true }),
+        winston.format.label({ label: 'ERROR' }),
         winston.format.timestamp(),
-        winston.format.printf(logMessageFormatter),
+        winston.format.printf(errorMessageFormatter),
       ),
     }),
-    new winston.transports.File({
-      filename: 'webserver_error.log',
-      dirname: 'log/webserver',
-      level: 'webserver_error',
-    //   silent: true,
+  ],
+  exceptionHandlers: [
+    new DailyRotateFile({
+      level: 'error',
+      datePattern: 'YYYY-MM-DD',
+      dirname: 'log',
+      filename: `%DATE%.exception.log`,
+      maxFiles: 30,
       format: winston.format.combine(
-        winston.format.label({ label: 'WEBSERVER_ERROR' }),
+        winston.format.metadata(),
+        winston.format.errors({ stack: true }),
+        winston.format.label({ label: 'EERROR' }),
         winston.format.timestamp(),
-        winston.format.printf(logMessageFormatter),
-      ),
-    }),
-    new winston.transports.File({
-      filename: 'gameserver_error.log',
-      dirname: 'log/gameserver',
-      level: 'gameserver_error',
-    //   silent: true,
-      format: winston.format.combine(
-        winston.format.label({ label: 'GAMESERVER_ERROR' }),
-        winston.format.timestamp(),
-        winston.format.printf(logMessageFormatter),
+        winston.format.printf(errorMessageFormatter),
       ),
     }),
   ],
