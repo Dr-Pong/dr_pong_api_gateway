@@ -10,7 +10,7 @@ async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+  // app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
