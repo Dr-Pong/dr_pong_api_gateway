@@ -9,6 +9,21 @@ import { catchError, tap } from 'rxjs/operators';
 import { LogEntry, Logger, createLogger } from 'winston';
 import { LogWinstonConfig } from './winston.configs';
 
+export class ResponseLogEntryDto {
+  level: string;
+  message: string;
+  type: string;
+  ip: string;
+  ClassName: string;
+  FunctionName: string;
+  context: string;
+  return: any; // 일단 any 여기에 성공한 리턴값이 담길수도 있고, 실패한 리턴값이 담길수도 있음
+
+  constructor(data: Partial<ResponseLogEntryDto>) {
+    Object.assign(this, data);
+  }
+}
+
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   private logger: Logger;
@@ -57,9 +72,10 @@ export class LoggingInterceptor implements NestInterceptor {
     };
 
     this.logger.log(requestLogEntry);
+
     return next.handle().pipe(
       tap((controllerReturnValue) => {
-        const responseLogEntry: LogEntry = {
+        const responseLogEntry = new ResponseLogEntryDto({
           level: 'info',
           message: 'TEST',
           type: 'Response',
@@ -68,17 +84,17 @@ export class LoggingInterceptor implements NestInterceptor {
           FunctionName: FunctionName,
           context: 'Your Log Context',
           return: controllerReturnValue,
-        };
+        });
         this.logger.log(responseLogEntry);
       }),
       catchError((error) => {
-        const errorMessage = error.message;
-        const stackTrace = error.stack;
+        const errorMessage = error?.message;
+        const stackTrace = error?.stack;
         const timestamp = new Date().toISOString();
         const user = request?.user;
-        const serverVersion = process.env.SERVER_VERSION;
-        const os = process.platform;
-        const hostname = process.env.HOSTNAME;
+        // const serverVersion = process.env.SERVER_VERSION;
+        // const os = process.platform;
+        // const hostname = process.env.HOSTNAME;
 
         const errorLogEntry: LogEntry = {
           level: 'error',
@@ -92,14 +108,22 @@ export class LoggingInterceptor implements NestInterceptor {
           stackTrace,
           timestamp,
           user,
-          serverVersion,
-          os,
-          hostname,
           error,
         };
-
-        this.logger.error(errorLogEntry);
-        return throwError(error); // 오류를 다시 방출합니다.
+        if (error.response?.data.statusCode) {
+          const responseLogEntry = new ResponseLogEntryDto({
+            level: 'info',
+            message: 'TEST',
+            type: 'Response',
+            ip: ip,
+            ClassName: ClassName,
+            FunctionName: FunctionName,
+            context: 'Your Log Context',
+            return: error.response.data,
+          });
+          this.logger.log(responseLogEntry);
+        } else this.logger.error(errorLogEntry);
+        return throwError(() => error);
       }),
     );
   }
