@@ -37,10 +37,11 @@ export class LoggingInterceptor implements NestInterceptor {
       '';
     const token = request?.headers?.authorization?.split(' ')[1];
     let userInfo = null;
-    if (token) {
+    try {
       const user = jwtService.verify(token);
       userInfo = user;
-    }
+    } catch (error) {}
+
     const ClassName = context.getClass().name;
     const FunctionName = context.getHandler().name;
     const originalUrl = request?.originalUrl;
