@@ -3,6 +3,7 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  HttpException,
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -119,7 +120,7 @@ export class LoggingInterceptor implements NestInterceptor {
           userInfo: userInfo,
         });
 
-        if (error.response?.data.statusCode) {
+        if (error.response?.data.statusCode < 500) {
           const responseLogEntry = new ResponseLogEntryDto({
             level: 'info',
             message: 'TEST',
@@ -132,7 +133,11 @@ export class LoggingInterceptor implements NestInterceptor {
             return: error.response.data,
           });
           this.logger.log(responseLogEntry);
-        } else this.logger.error(errorLogEntry);
+        } else {
+          this.logger.error(errorLogEntry);
+          const customError = new HttpException('Bad Request', 400);
+          return throwError(() => customError); // 400 에러를 throwError
+        }
         return throwError(() => error);
       }),
     );

@@ -9,6 +9,7 @@ import {
   Body,
   Get,
   Query,
+  Patch,
 } from '@nestjs/common';
 import axios from 'axios';
 import { AuthGuard } from '@nestjs/passport';
@@ -162,7 +163,7 @@ export class GatewayChannelNormalController {
     }
   }
 
-  @Post('/:roomId/magicpass')
+  @Patch('/:roomId/invitation')
   @UseGuards(AuthGuard('jwt'))
   async channelMagicPassPost(
     @Req() request,
@@ -170,8 +171,8 @@ export class GatewayChannelNormalController {
   ): Promise<void> {
     try {
       const accessToken = request.headers.authorization;
-      const response = await axios.post(
-        process.env.CHATSERVER_URL + `/channels/${channelId}/magicpass`,
+      const response = await axios.patch(
+        process.env.CHATSERVER_URL + `/channels/${channelId}/invitation`,
         {},
         {
           headers: {
