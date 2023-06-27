@@ -64,7 +64,7 @@ export class GatewayChannelNormalController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -87,7 +87,7 @@ export class GatewayChannelNormalController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -133,7 +133,7 @@ export class GatewayChannelNormalController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -158,7 +158,7 @@ export class GatewayChannelNormalController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -181,7 +181,7 @@ export class GatewayChannelNormalController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -205,7 +205,7 @@ export class GatewayChannelNormalController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -224,7 +224,7 @@ export class GatewayChannelNormalController {
       );
       return response?.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -249,7 +249,7 @@ export class GatewayChannelNormalController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 }
