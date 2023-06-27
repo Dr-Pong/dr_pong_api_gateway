@@ -8,21 +8,12 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { LogEntry, Logger, createLogger } from 'winston';
 import { LogWinstonConfig } from './winston.configs';
-
-export class ResponseLogEntryDto {
-  level: string;
-  message: string;
-  type: string;
-  ip: string;
-  ClassName: string;
-  FunctionName: string;
-  context: string;
-  return: any; // 일단 any 여기에 성공한 리턴값이 담길수도 있고, 실패한 리턴값이 담길수도 있음
-
-  constructor(data: Partial<ResponseLogEntryDto>) {
-    Object.assign(this, data);
-  }
-}
+import { JwtService } from '@nestjs/jwt';
+import {
+  ErrorLogEntryDto,
+  RequestLogEntryDto,
+  ResponseLogEntryDto,
+} from './log.format.entry.dto';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -32,13 +23,26 @@ export class LoggingInterceptor implements NestInterceptor {
     this.logger = createLogger(LogWinstonConfig);
   }
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const jwtService: JwtService = new JwtService({
+      secret: 'jwtSecret',
+      signOptions: {
+        expiresIn: 60 * 60 * 60,
+      },
+    });
     const request: any = context.switchToHttp().getRequest();
     const ip =
       request?.headers['x-forwarded-for'] ||
       request?.headers['x-real-ip'] ||
       request?.connection?.remoteAddress ||
       '';
-
+    const token = request?.headers?.authorization?.split(' ')[1];
+    console.log(token);
+    let userInfo = null;
+    if (token) {
+      const user = jwtService.verify(token);
+      console.log(user);
+      userInfo = user;
+    }
     const ClassName = context.getClass().name;
     const FunctionName = context.getHandler().name;
     const originalUrl = request?.originalUrl;
@@ -54,8 +58,7 @@ export class LoggingInterceptor implements NestInterceptor {
       params: params,
       query: query,
     };
-
-    const requestLogEntry: LogEntry = {
+    const requestLogEntry: RequestLogEntryDto = new RequestLogEntryDto({
       level: 'info',
       message: 'TEST',
       type: 'Request',
@@ -65,13 +68,11 @@ export class LoggingInterceptor implements NestInterceptor {
       FunctionName: FunctionName,
       originalUrl: originalUrl,
       method: method,
-      body: body,
-      params: params,
-      query: query,
       requestInfo: requestInfo,
-    };
-
+      userInfo: userInfo,
+    });
     this.logger.log(requestLogEntry);
+
     return next.handle().pipe(
       tap((controllerReturnValue) => {
         const responseLogEntry = new ResponseLogEntryDto({
@@ -82,6 +83,7 @@ export class LoggingInterceptor implements NestInterceptor {
           ClassName: ClassName,
           FunctionName: FunctionName,
           context: 'Your Log Context',
+          userInfo: userInfo,
           return: controllerReturnValue,
         });
         this.logger.log(responseLogEntry);
@@ -89,26 +91,21 @@ export class LoggingInterceptor implements NestInterceptor {
       catchError((error) => {
         const errorMessage = error?.message;
         const stackTrace = error?.stack;
-        const timestamp = new Date().toISOString();
-        const user = request?.user;
-        // const serverVersion = process.env.SERVER_VERSION;
-        // const os = process.platform;
-        // const hostname = process.env.HOSTNAME;
+        console.log(userInfo);
 
-        const errorLogEntry: LogEntry = {
+        const errorLogEntry = new ErrorLogEntryDto({
           level: 'error',
           message: 'Error',
           type: 'Error',
           context: 'Your Log Context',
-          ip,
-          ClassName,
-          FunctionName,
-          errorMessage,
-          stackTrace,
-          timestamp,
-          user,
-          error,
-        };
+          ip: ip,
+          ClassName: ClassName,
+          FunctionName: FunctionName,
+          errorMessage: errorMessage,
+          stackTrace: stackTrace,
+          userInfo: userInfo,
+        });
+
         if (error.response?.data.statusCode) {
           const responseLogEntry = new ResponseLogEntryDto({
             level: 'info',
@@ -118,6 +115,7 @@ export class LoggingInterceptor implements NestInterceptor {
             ClassName: ClassName,
             FunctionName: FunctionName,
             context: 'Your Log Context',
+            userInfo,
             return: error.response.data,
           });
           this.logger.log(responseLogEntry);
