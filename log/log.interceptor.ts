@@ -72,7 +72,6 @@ export class LoggingInterceptor implements NestInterceptor {
     };
 
     this.logger.log(requestLogEntry);
-
     return next.handle().pipe(
       tap((controllerReturnValue) => {
         const responseLogEntry = new ResponseLogEntryDto({
