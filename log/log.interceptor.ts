@@ -71,7 +71,6 @@ export class LoggingInterceptor implements NestInterceptor {
         userInfo: userInfo,
       });
       this.logger.error(errorLogEntry);
-      return throwError(() => error);
     }
 
     const requestLogEntry: RequestLogEntryDto = new RequestLogEntryDto({
