@@ -21,7 +21,7 @@ const logFormatter = ({
     requestInfo,
     userInfo,
   } = metadata;
-  if (returnValue)
+  if (returnValue || returnValue === '')
     return `[${ip}]  ${type} ${timestamp}  [User : ${JSON.stringify(
       userInfo,
     )}] ${label} [Class : ${ClassName}] [Function : ${FunctionName}] ${message} ${JSON.stringify(
