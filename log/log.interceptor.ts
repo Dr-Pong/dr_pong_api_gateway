@@ -35,12 +35,6 @@ export class LoggingInterceptor implements NestInterceptor {
       request?.headers['x-real-ip'] ||
       request?.connection?.remoteAddress ||
       '';
-    const token = request?.headers?.authorization?.split(' ')[1];
-    let userInfo = null;
-    try {
-      const user = jwtService.verify(token);
-      userInfo = user;
-    } catch (error) {}
 
     const ClassName = context.getClass().name;
     const FunctionName = context.getHandler().name;
@@ -57,6 +51,29 @@ export class LoggingInterceptor implements NestInterceptor {
       params: params,
       query: query,
     };
+
+    const token = request?.headers?.authorization?.split(' ')[1];
+    let userInfo = null;
+    try {
+      const user = jwtService.verify(token);
+      userInfo = user;
+    } catch (error) {
+      const errorLogEntry = new ErrorLogEntryDto({
+        level: 'error',
+        message: 'Error',
+        type: 'Error',
+        context: 'Your Log Context',
+        ip: ip,
+        ClassName: ClassName,
+        FunctionName: FunctionName,
+        errorMessage: error.message,
+        stackTrace: error.stack,
+        userInfo: userInfo,
+      });
+      this.logger.error(errorLogEntry);
+      return throwError(() => error);
+    }
+
     const requestLogEntry: RequestLogEntryDto = new RequestLogEntryDto({
       level: 'info',
       message: 'TEST',
