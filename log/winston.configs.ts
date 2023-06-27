@@ -4,8 +4,8 @@ import * as winston from 'winston';
 
 const logFormatter = ({
   level,
-  message,
   context,
+  message,
   label,
   timestamp,
   metadata,
@@ -19,12 +19,17 @@ const logFormatter = ({
     originalUrl,
     method,
     requestInfo,
+    userInfo,
   } = metadata;
-  if (returnValue)
-    return `[${ip}]  ${type} ${timestamp}     ${label} [Class : ${ClassName}] [Function : ${FunctionName}] ${message} ${JSON.stringify(
+  if (returnValue || returnValue === '')
+    return `[${ip}]  ${type} ${timestamp}  [User : ${JSON.stringify(
+      userInfo,
+    )}] ${label} [Class : ${ClassName}] [Function : ${FunctionName}] ${message} ${JSON.stringify(
       returnValue,
     )}`;
-  return `[${ip}]  ${type} ${timestamp}     ${label} [Class : ${ClassName}] [Function : ${FunctionName}] ${message} ${originalUrl} ${method}  ${JSON.stringify(
+  return `[${ip}]  ${type} ${timestamp} [User : ${JSON.stringify(
+    userInfo,
+  )}]   ${label} [Class : ${ClassName}] [Function : ${FunctionName}] ${message} ${originalUrl} ${method}  ${JSON.stringify(
     requestInfo,
   )}`;
 };
@@ -44,12 +49,11 @@ const errorMessageFormatter = ({
     FunctionName,
     errorMessage,
     stackTrace,
-    user,
-    serverVersion,
-    os,
-    hostname,
+    userInfo,
   } = metadata;
-  return `[${ip}] ${type} ${timestamp} ${label} [Class: ${ClassName}] [Function: ${FunctionName}] ${errorMessage} ${stackTrace}`;
+  return `[${ip}] ${type} ${timestamp} ${label} [User: ${JSON.stringify(
+    userInfo,
+  )}] [Class: ${ClassName}] [Function: ${FunctionName}] ${errorMessage} ${stackTrace}`;
 };
 
 export const LogWinstonConfig: WinstonModuleOptions = {
