@@ -10,18 +10,22 @@ const logFormatter = ({
   timestamp,
   metadata,
 }) => {
-  if (metadata.return)
-    return `[${metadata.ip}]  ${
-      metadata.type
-    } ${timestamp}     ${label} [Class : ${metadata.ClassName}] [Function : ${
-      metadata.FunctionName
-    }] ${message} ${JSON.stringify(metadata.return)}`;
-  return `[${metadata.ip}]  ${
-    metadata.type
-  } ${timestamp}     ${label} [Class : ${metadata.ClassName}] [Function : ${
-    metadata.FunctionName
-  }] ${message} ${metadata.originalUrl} ${metadata.method}  ${JSON.stringify(
-    metadata.requestInfo,
+  const {
+    ip,
+    type,
+    ClassName,
+    FunctionName,
+    return: returnValue,
+    originalUrl,
+    method,
+    requestInfo,
+  } = metadata;
+  if (returnValue)
+    return `[${ip}]  ${type} ${timestamp}     ${label} [Class : ${ClassName}] [Function : ${FunctionName}] ${message} ${JSON.stringify(
+      returnValue,
+    )}`;
+  return `[${ip}]  ${type} ${timestamp}     ${label} [Class : ${ClassName}] [Function : ${FunctionName}] ${message} ${originalUrl} ${method}  ${JSON.stringify(
+    requestInfo,
   )}`;
 };
 
