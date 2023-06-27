@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Query } from '@nestjs/common';
+import { Controller, Get, Inject, Logger, Query } from '@nestjs/common';
 import axios from 'axios';
 import { QueryValidatePipe } from 'src/gateway/validation/custom-query-validate-pipe';
 import { RanksBottomResponseDto } from './dtos/user-rank-bottom-respose.dto';

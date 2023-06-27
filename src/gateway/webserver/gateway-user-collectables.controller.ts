@@ -20,7 +20,6 @@ import { AuthGuard } from '@nestjs/passport';
 import {
   PatchUserAchievementsRequestDto,
   PatchUserEmojisRequestDto,
-  PatchUserImageRequestDto,
   PatchUserMessageRequestDto,
   PatchUserTitleRequestDto,
 } from './dtos/user-patch-input.dto';
