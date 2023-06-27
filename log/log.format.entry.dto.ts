@@ -34,20 +34,6 @@ export class RequestLogEntryDto {
   }
 }
 
-// const errorLogEntry: LogEntry = {
-//     level: 'error',
-//     message: 'Error',
-//     type: 'Error',
-//     context: 'Your Log Context',
-//     ip,
-//     ClassName,
-//     FunctionName,
-//     errorMessage,
-//     stackTrace,
-//     timestamp,
-//     error,
-//     userInfo,
-//   };
 export class ErrorLogEntryDto {
   level: string;
   message: string;

@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { LogEntry, Logger, createLogger } from 'winston';
+import { Logger, createLogger } from 'winston';
 import { LogWinstonConfig } from './winston.configs';
 import { JwtService } from '@nestjs/jwt';
 import {
@@ -36,11 +36,9 @@ export class LoggingInterceptor implements NestInterceptor {
       request?.connection?.remoteAddress ||
       '';
     const token = request?.headers?.authorization?.split(' ')[1];
-    console.log(token);
     let userInfo = null;
     if (token) {
       const user = jwtService.verify(token);
-      console.log(user);
       userInfo = user;
     }
     const ClassName = context.getClass().name;
@@ -91,8 +89,6 @@ export class LoggingInterceptor implements NestInterceptor {
       catchError((error) => {
         const errorMessage = error?.message;
         const stackTrace = error?.stack;
-        console.log(userInfo);
-
         const errorLogEntry = new ErrorLogEntryDto({
           level: 'error',
           message: 'Error',
