@@ -165,7 +165,7 @@ export class GatewayChannelNormalController {
 
   @Patch('/:roomId/invitation')
   @UseGuards(AuthGuard('jwt'))
-  async channelMagicPassPost(
+  async channelInvitationPatch(
     @Req() request,
     @Param('roomId') channelId: string,
   ): Promise<void> {
@@ -174,6 +174,28 @@ export class GatewayChannelNormalController {
       const response = await axios.patch(
         process.env.CHATSERVER_URL + `/channels/${channelId}/invitation`,
         {},
+        {
+          headers: {
+            Authorization: accessToken,
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Delete('/:roomId/invitation')
+  @UseGuards(AuthGuard('jwt'))
+  async channelInvitationDelete(
+    @Req() request,
+    @Param('roomId') channelId: string,
+  ): Promise<void> {
+    try {
+      const accessToken = request.headers.authorization;
+      const response = await axios.delete(
+        process.env.CHATSERVER_URL + `/channels/${channelId}/invitation`,
         {
           headers: {
             Authorization: accessToken,
