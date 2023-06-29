@@ -22,14 +22,14 @@ const logFormatter = ({
     userInfo,
   } = metadata;
   if (returnValue || returnValue === '')
-    return `[${ip}]  ${type} ${timestamp}  [User : ${JSON.stringify(
+    return `[${ip}] ${type} ${timestamp} [User: ${JSON.stringify(
       userInfo,
-    )}] ${label} [Class : ${ClassName}] [Function : ${FunctionName}] ${message} ${JSON.stringify(
+    )}] ${label} [Class: ${ClassName}] [Function: ${FunctionName}] ${message} ${JSON.stringify(
       returnValue,
     )}`;
-  return `[${ip}]  ${type} ${timestamp} [User : ${JSON.stringify(
+  return `[${ip}] ${type} ${timestamp} [User : ${JSON.stringify(
     userInfo,
-  )}]   ${label} [Class : ${ClassName}] [Function : ${FunctionName}] ${message} ${originalUrl} ${method}  ${JSON.stringify(
+  )}]   ${label} [Class: ${ClassName}] [Function: ${FunctionName}] ${message} ${originalUrl} ${method} ${JSON.stringify(
     requestInfo,
   )}`;
 };
@@ -66,7 +66,7 @@ export const LogWinstonConfig: WinstonModuleOptions = {
   },
   transports: [
     new DailyRotateFile({
-      dirname: 'log',
+      dirname: `log/%DATE%`,
       filename: '%DATE%.log',
       datePattern: 'YYYY-MM-DD',
       maxSize: '20m',
@@ -79,7 +79,7 @@ export const LogWinstonConfig: WinstonModuleOptions = {
       ),
     }),
     new DailyRotateFile({
-      dirname: 'log',
+      dirname: `log/%DATE%`,
       filename: '%DATE%_error.log',
       datePattern: 'YYYY-MM-DD',
       maxSize: '20m',
@@ -96,11 +96,11 @@ export const LogWinstonConfig: WinstonModuleOptions = {
   ],
   exceptionHandlers: [
     new DailyRotateFile({
-      level: 'error',
-      datePattern: 'YYYY-MM-DD',
-      dirname: 'log',
+      dirname: `log/%DATE%`,
       filename: `%DATE%.exception.log`,
+      datePattern: 'YYYY-MM-DD',
       maxFiles: 30,
+      level: 'error',
       format: winston.format.combine(
         winston.format.metadata(),
         winston.format.errors({ stack: true }),
