@@ -14,7 +14,7 @@ export class JwtStrategyNoname extends PassportStrategy(Strategy, 'jwtNoname') {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
-  users: Map<string, AuthDto> = new Map();
+  // users: Map<string, AuthDto> = new Map();
 
   async validate(payload): Promise<AuthDto> {
     const user = await this.findUser(payload);
