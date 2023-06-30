@@ -1,7 +1,7 @@
 export class GameInviteAcceptDto {
-  gameId: string;
+  inviteId: string;
 
-  constructor(gameId: string) {
-    this.gameId = gameId;
+  constructor(inviteId: string) {
+    this.inviteId = inviteId;
   }
 }
