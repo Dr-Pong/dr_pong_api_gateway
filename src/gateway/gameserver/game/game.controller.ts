@@ -105,7 +105,7 @@ export class GatewayGameController {
     }
   }
 
-  @Post('/queue/:type/:mode')
+  @Post('/queue/:type')
   @UseGuards(AuthGuard('jwt'))
   async gameQueuePost(
     @Req() request,
