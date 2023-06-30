@@ -11,6 +11,7 @@ import { GatewayFriendChatController } from './friends/friend-chat.controller';
 import { GatewayChannelAdminController } from './channels/admin.controller';
 import { GatewayChannelNormalController } from './channels/normal.controller';
 import { GateWayNotificationController } from './notification/notification.controller';
+import { GatewayGameController } from '../gameserver/game/game.controller';
 
 // webserver controllers
 @Module({
@@ -38,3 +39,10 @@ export class WebserverModule {}
   ],
 })
 export class ChatserverModule {}
+
+// gameserver controllers
+@Module({
+  imports: [AuthModule],
+  controllers: [GatewayGameController],
+})
+export class GameserverModule {}
