@@ -96,17 +96,7 @@ describe('GatewayGameController', () => {
           });
         expect(response.statusCode).toBe(401);
       });
-      //   it('[Error Case] 게임서버 에서 주는 에러반환', async () => {
-      //     const user = await testService.createBasicUser();
-      //     const token = await testService.giveTokenToUser(user);
-      //     const response = await request(app.getHttpServer())
-      //       .delete(`/games/invitation`)
-      //       .set({
-      //         Authorization: `Bearer ${token}`,
-      //         withCredentials: true,
-      //       });
-      //     expect(response.statusCode).toBe(400);
-      //   });
+
       it('[Valid Case] 정상요청', async () => {
         const user = await testService.createBasicUser();
         const token = await testService.giveTokenToUser(user);
