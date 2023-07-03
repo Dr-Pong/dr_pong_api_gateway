@@ -6,6 +6,6 @@ import {
   WebserverModule,
 } from './chatserver/servers.gateway.module';
 @Module({
-  imports: [AuthModule, WebserverModule, ChatserverModule, GameserverModule],
+  imports: [WebserverModule, ChatserverModule, GameserverModule],
 })
 export class GatewayModule {}
