@@ -73,7 +73,7 @@ describe('GatewayGameController', () => {
         const user = await testService.createBasicUser();
         const token = await testService.giveTokenToUser(user);
         const response = await request(app.getHttpServer())
-          .post(`/games/invitation/nouser}`)
+          .post(`/games/invitation/nouser`)
           .set({
             Authorization: `Bearer ${token}`,
             withCredentials: true,
