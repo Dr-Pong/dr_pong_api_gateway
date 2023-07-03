@@ -1,6 +1,12 @@
 import { WinstonModuleOptions } from 'nest-winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 import * as winston from 'winston';
+import * as moment from 'moment-timezone';
+
+const customTimestampFormat = winston.format((info) => {
+  info.timestamp = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
+  return info;
+});
 
 const logFormatter = ({
   level,
@@ -74,7 +80,7 @@ export const LogWinstonConfig: WinstonModuleOptions = {
       format: winston.format.combine(
         winston.format.metadata(),
         winston.format.label({ label: 'LOG' }),
-        winston.format.timestamp(),
+        customTimestampFormat(),
         winston.format.printf(logFormatter),
       ),
     }),
@@ -89,7 +95,7 @@ export const LogWinstonConfig: WinstonModuleOptions = {
         winston.format.metadata(),
         winston.format.errors({ stack: true }),
         winston.format.label({ label: 'ERROR' }),
-        winston.format.timestamp(),
+        customTimestampFormat(),
         winston.format.printf(errorMessageFormatter),
       ),
     }),
@@ -105,7 +111,7 @@ export const LogWinstonConfig: WinstonModuleOptions = {
         winston.format.metadata(),
         winston.format.errors({ stack: true }),
         winston.format.label({ label: 'EERROR' }),
-        winston.format.timestamp(),
+        customTimestampFormat(),
         winston.format.printf(errorMessageFormatter),
       ),
     }),
