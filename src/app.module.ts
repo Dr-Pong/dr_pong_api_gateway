@@ -9,11 +9,11 @@ import { typeORMConfig } from './configs/typeorm.configs';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { UserModule } from './user/user.module';
-import { PongLoggerModule } from 'log/logger.module';
+import { PongLoggerModule } from './log/logger.module';
 import { ProfileImageRepository } from './auth/profile-image.repository';
 import { ProfileImage } from './auth/profile-image.entity';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { LoggingInterceptor } from 'log/log.interceptor';
+import { LoggingInterceptor } from 'src/log/log.interceptor';
 
 @Module({
   imports: [
