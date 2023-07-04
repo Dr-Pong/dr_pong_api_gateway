@@ -48,4 +48,9 @@ export class UserService {
       },
     );
   }
+
+  async isTfaOnByUser(userId: number): Promise<boolean> {
+    const user = await this.userRepository.findById(userId);
+    return user.secondAuthSecret !== null;
+  }
 }
