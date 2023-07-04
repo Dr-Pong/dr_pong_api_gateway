@@ -120,7 +120,7 @@ export class LoggingInterceptor implements NestInterceptor {
           userInfo: userInfo,
         });
 
-        if (error.response?.data.statusCode < 500) {
+        if (error.response?.data?.statusCode < 500) {
           const responseLogEntry = new ResponseLogEntryDto({
             level: 'info',
             message: 'TEST',
