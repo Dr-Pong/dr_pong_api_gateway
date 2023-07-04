@@ -4,6 +4,7 @@ import { IsolationLevel, Transactional } from 'typeorm-transactional';
 import { UserRepository } from './user.repository';
 import { ProfileImageRepository } from '../auth/profile-image.repository';
 import { PatchUserImageDto } from './dtos/patch-user-image.dto';
+import { IsTfaOnResponseDto } from './dtos/tfa-on.response.dto';
 
 @Injectable()
 export class UserService {
@@ -49,8 +50,8 @@ export class UserService {
     );
   }
 
-  async isTfaOnByUser(userId: number): Promise<boolean> {
+  async isTfaOnByUser(userId: number): Promise<IsTfaOnResponseDto> {
     const user = await this.userRepository.findById(userId);
-    return user.secondAuthSecret !== null;
+    return new IsTfaOnResponseDto(user.secondAuthSecret !== null);
   }
 }
