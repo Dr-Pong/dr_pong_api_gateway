@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Logger,
   Param,
   Patch,
@@ -37,5 +38,14 @@ export class UserController {
       accessToken,
       patchUserImageDto,
     );
+  }
+
+  @Get('/:nickname/tfa')
+  @UseGuards(AuthGuard('jwt'))
+  async isTfaOn(
+    @Param('nickname') nickname: string,
+    @Requestor() requestor: User,
+  ): Promise<boolean> {
+    return await this.userService.isTfaOnByUser(requestor.id);
   }
 }
