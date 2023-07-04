@@ -14,6 +14,7 @@ import { UserService } from './user.service';
 import { Requestor } from '../auth/jwt/auth.requestor.decorator';
 import { User } from './user.entity';
 import { PatchUserImageDto } from './dtos/patch-user-image.dto';
+import { IsTfaOnResponseDto } from './dtos/tfa-on.response.dto';
 
 @Controller('/users')
 export class UserController {
@@ -45,7 +46,7 @@ export class UserController {
   async isTfaOn(
     @Param('nickname') nickname: string,
     @Requestor() requestor: User,
-  ): Promise<boolean> {
+  ): Promise<IsTfaOnResponseDto> {
     return await this.userService.isTfaOnByUser(requestor.id);
   }
 }
