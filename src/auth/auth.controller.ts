@@ -2,9 +2,9 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Logger,
   Post,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -17,6 +17,7 @@ import { UserIdCardDto } from './jwt/auth.user.id-card.dto';
 import { UserRepository } from 'src/user/user.repository';
 import { ROLETYPE_MEMBER } from 'src/user/type.user.roletype';
 import { User } from 'src/user/user.entity';
+import { generateOtpDto } from './dto/auth.generateOtp.response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -53,81 +54,63 @@ export class AuthController {
     return { accessToken: accessToken };
   }
 
-  // 2fa
-  // 최초 등록할때 켜고 2fa user true로 바꿔주고
-  /**
-POST /auth/tfa
-request body: {
-}
-response body: {
-	redirectionUrl: string;
-	qrCode: string;
-	secretKey: string;
-}
-response header: {
-	201: created;
-	401: unauthorized; // no token
-}
-```
-   */
-  @Post('/tfa')
+  @Get('/tfa')
   @UseGuards(AuthGuard('jwt'))
-  async registerOtp(@Requestor() requestor: UserIdCardDto) {
+  async registerOtp(
+    @Requestor() requestor: UserIdCardDto,
+  ): Promise<generateOtpDto> {
     const userId: number = requestor.id;
-    const { secretKey, url, qrCode } = await this.authService.generateOtp(
-      userId,
+    const responseDto = new generateOtpDto(
+      await this.authService.generateOtp(userId),
     );
-    const redirectionUrl = url;
-    this.authService.checkOtpApplied(userId, secretKey);
-    return { redirectionUrl, secretKey, qrCode };
+    console.log(responseDto.secretKey);
+    return responseDto;
   }
 
-  // 2fa 입력 값이 우리가 가지고 있는 값과 일치하는지 확인 하는
-  /**
-  * POST /auth/tfa/otp
-request body: {
-	password: string; 
-}
-response header: {
-	200: OK;
-	40~:
-}
-response body: {
-	accessToken: string;
-}
-  */
   @Post('/tfa/otp')
   @UseGuards(AuthGuard('jwt'))
-  async verifyOtp(
+  async checkVerifyOtp(
     @Requestor() requestor: UserIdCardDto,
     @Body('password') password: string,
-  ) {
+  ): Promise<JwtDto> {
     const userId: number = requestor.id;
-    const isValid: boolean = await this.authService.verifyOtp(userId, password);
-    if (!isValid) throw new UnauthorizedException();
+    await this.authService.verifyOtp(userId, password);
     const user = await this.userRepository.findById(userId);
     const authDto: AuthDto = new AuthDto(
       user.id,
       user.nickname,
-      user.secondAuthSecret ? true : false,
+      false,
       ROLETYPE_MEMBER,
     );
     const accessToken: string = await this.authService.createJwtFromUser(
       authDto,
     );
-    return { accessToken };
+    return new JwtDto(accessToken);
   }
 
-  // 2차인증 끄는 요청
-  /**
-   * DELETE /auth/tfa
-response body: {
-}
-response header: {
-	200: OK!
-	401: unauthorized; // no token
-}
-   */
+  // 최초 2차 인증 요청 password
+  @Post('/tfa')
+  @UseGuards(AuthGuard('jwt'))
+  async verifyOtpFirst(
+    @Requestor() requestor: UserIdCardDto,
+    @Body('password') password: string,
+  ) {
+    const userId: number = requestor.id;
+    const user = await this.userRepository.findById(userId);
+    console.log(user.secondAuthSecret);
+    await this.authService.checkOtpApplied(userId, password);
+    const authDto: AuthDto = new AuthDto(
+      user.id,
+      user.nickname,
+      false,
+      ROLETYPE_MEMBER,
+    );
+    const accessToken: string = await this.authService.createJwtFromUser(
+      authDto,
+    );
+    return new JwtDto(accessToken);
+  }
+
   @Delete('/tfa')
   @UseGuards(AuthGuard('jwt'))
   async turnOffOtp(@Requestor() requestor: UserIdCardDto) {
