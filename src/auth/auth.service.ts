@@ -165,10 +165,10 @@ export class AuthService {
   }
 
   async getUserMe(getDto: GetUserMeDto): Promise<UserMeDto> {
-    const decode = this.jwtService.verify(getDto.token);
     if (!getDto.token) {
       return UserMeDto.guestUserMe();
     }
+    const decode = this.jwtService.verify(getDto.token);
 
     const jwt: TokenInterface = this.jwtService.verify(getDto.token);
     if (jwt.roleType === ROLETYPE_NONAME) {
