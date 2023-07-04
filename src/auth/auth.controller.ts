@@ -51,7 +51,7 @@ export class AuthController {
     });
     const accessToken = await this.authService.createJwtFromUser(signedUser);
 
-    return { accessToken: accessToken };
+    return new JwtDto(accessToken);
   }
 
   @Get('/tfa')
@@ -63,7 +63,6 @@ export class AuthController {
     const responseDto = new generateOtpDto(
       await this.authService.generateOtp(userId),
     );
-    console.log(responseDto.secretKey);
     return responseDto;
   }
 
@@ -88,7 +87,6 @@ export class AuthController {
     return new JwtDto(accessToken);
   }
 
-  // 최초 2차 인증 요청 password
   @Post('/tfa')
   @UseGuards(AuthGuard('jwt'))
   async verifyOtpFirst(
