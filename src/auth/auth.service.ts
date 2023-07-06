@@ -20,7 +20,7 @@ import { GetUserMeDto } from './dto/get.user.me.dto';
 import { ROLETYPE_MEMBER, ROLETYPE_NONAME } from '../user/type.user.roletype';
 import { User } from '../user/user.entity';
 import { ProfileImage } from './profile-image.entity';
-import { generateOtpResponseDto } from './dto/auth.generateOtp.response.dto';
+import { generateOtpDto } from './dto/auth.generateOtp.response.dto';
 import { postUserDto } from './dto/post.user.dto';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class AuthService {
     if (user.secondAuthSecret) throw new BadRequestException();
 
     this.secondAuth.set(userId, secretKey);
-    return generateOtpResponseDto.response(secretKey, url, qrCode);
+    return generateOtpDto.response(secretKey, url, qrCode);
   }
 
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
@@ -52,13 +52,11 @@ export class AuthService {
     if (!secretKey) {
       return;
     }
-
     const isValid: boolean = authenticator.verify({
       token,
       secret: secretKey,
     });
     if (!isValid) throw new UnauthorizedException();
-
     const user = await this.userRepository.findById(userId);
     if (user.secondAuthSecret) throw new BadRequestException();
 
@@ -68,7 +66,7 @@ export class AuthService {
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
   async verifyOtp(userId: number, token: string): Promise<boolean> {
     const user: User = await this.userRepository.findById(userId);
-    if (user.secondAuthSecret) throw new BadRequestException();
+    if (!user.secondAuthSecret) throw new BadRequestException();
 
     const isValid: boolean = authenticator.verify({
       token,
@@ -170,6 +168,7 @@ export class AuthService {
     if (!getDto.token) {
       return UserMeDto.guestUserMe();
     }
+    const decode = this.jwtService.verify(getDto.token);
 
     const jwt: TokenInterface = this.jwtService.verify(getDto.token);
     if (jwt.roleType === ROLETYPE_NONAME) {
@@ -181,8 +180,10 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     const responseDto: UserMeDto = UserMeDto.fromUser(user);
-    if (user.nickname) responseDto.roleType = ROLETYPE_MEMBER;
-
+    if (user.nickname) {
+      responseDto.roleType = ROLETYPE_MEMBER;
+      responseDto.tfaRequired = decode.secondAuthRequired;
+    }
     return responseDto;
   }
 

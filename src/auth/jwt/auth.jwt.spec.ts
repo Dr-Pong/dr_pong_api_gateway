@@ -17,7 +17,6 @@ import { TestModule } from 'src/test/test.module';
 import { TestService } from 'src/test/test.service';
 import { GetUserMeDto } from '../dto/get.user.me.dto';
 import { AuthService } from '../auth.service';
-// import { RoleType } from '../type.user.roletype';
 
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;

@@ -5,7 +5,7 @@ import { User } from '../../user/user.entity';
 export class UserMeDto {
   nickname: string;
   imgUrl: string;
-  isSecondAuthOn: boolean;
+  tfaRequired: boolean;
   roleType: RoleType;
   constructor(
     nickname: string,
@@ -15,14 +15,14 @@ export class UserMeDto {
   ) {
     this.nickname = nickname;
     this.imgUrl = imgUrl;
-    this.isSecondAuthOn = isSecondAuthOn;
+    this.tfaRequired = isSecondAuthOn;
     this.roleType = roleType;
   }
   static guestUserMe(): UserMeDto {
     return {
       nickname: '',
       imgUrl: '',
-      isSecondAuthOn: false,
+      tfaRequired: false,
       roleType: ROLETYPE_GUEST,
     };
   }
@@ -30,7 +30,7 @@ export class UserMeDto {
     return {
       nickname: '',
       imgUrl: '',
-      isSecondAuthOn: false,
+      tfaRequired: false,
       roleType: ROLETYPE_NONAME,
     };
   }
@@ -38,7 +38,7 @@ export class UserMeDto {
     return {
       nickname: user.nickname,
       imgUrl: user.image.url,
-      isSecondAuthOn: user.secondAuthSecret !== null,
+      tfaRequired: user.secondAuthSecret !== null,
       roleType: ROLETYPE_NONAME,
     };
   }
