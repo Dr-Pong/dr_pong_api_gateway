@@ -132,6 +132,41 @@ export class AuthService {
     return authdto;
   }
 
+  async getGoogleAccessToken(authCode: string): Promise<string> {
+    this.logger.log(process.env.GG_TOKEN_URI);
+    try {
+      const response = await axios.post(process.env.GG_TOKEN_URI, {
+        grant_type: 'authorization_code',
+        code: authCode,
+        client_id: process.env.GG_CLIENT_ID,
+        client_secret: process.env.GG_CLIENT_SECRET,
+        redirect_uri: process.env.GG_REDIRECT_URI,
+      });
+      return response.data.access_token;
+    } catch (error) {
+      this.logger.log(error);
+      throw new UnauthorizedException();
+    }
+  }
+
+  async getGoogleUserInfo(accessToken: string): Promise<AuthDto> {
+    const response = await axios.get(process.env.GG_USER_INFO, {
+      headers: { Authorization: 'Bearer ' + accessToken },
+    });
+    if (response.status !== 200) throw new UnauthorizedException();
+    const email: string = response.data.email;
+    const existUser: User = await this.userRepository.findByEmail(email);
+    let authdto: AuthDto;
+    if (!existUser) {
+      const newUser = await this.userRepository.createUser({ email });
+      authdto = AuthDto.defaultUser(newUser.id, null, false, ROLETYPE_NONAME);
+    } else {
+      authdto = AuthDto.fromNonameUser(existUser);
+      if (existUser.nickname) authdto.roleType = ROLETYPE_MEMBER;
+    }
+    return authdto;
+  }
+
   async createJwtFromUser(user: AuthDto): Promise<string> {
     const token = this.jwtService.sign({
       id: user.id,
