@@ -37,6 +37,20 @@ export class AuthController {
     return { accessToken: jwt };
   }
 
+  @Post('/google')
+  async googleLogin(@Body('authCode') code: string): Promise<JwtDto> {
+    this.logger.log(code);
+    const accessToken: string = await this.authService.getGoogleAccessToken(
+      code,
+    );
+    const userInfo: AuthDto = await this.authService.getGoogleUserInfo(
+      accessToken,
+    );
+    const jwt: string = await this.authService.createJwtFromUser(userInfo);
+    this.logger.log(jwt);
+    return { accessToken: jwt };
+  }
+
   @Post('/signup')
   @UseGuards(AuthGuard('jwtNoname'))
   async signUp(
@@ -95,7 +109,6 @@ export class AuthController {
   ) {
     const userId: number = requestor.id;
     const user = await this.userRepository.findById(userId);
-    console.log(user.secondAuthSecret);
     await this.authService.checkOtpApplied(userId, password);
     const authDto: AuthDto = new AuthDto(
       user.id,
