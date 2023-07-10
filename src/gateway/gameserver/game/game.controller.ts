@@ -134,9 +134,8 @@ export class GatewayGameController {
   async gameQueueDelete(@Req() request): Promise<void> {
     try {
       const accessToken = request.headers.authorization;
-      const response = await axios.post(
+      const response = await axios.delete(
         process.env.GAMESERVER_URL + `/games/qeueu`,
-        {},
         {
           headers: {
             Authorization: accessToken,
