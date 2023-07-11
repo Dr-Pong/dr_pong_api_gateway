@@ -14,7 +14,7 @@ import { ProfileImageRepository } from './auth/profile-image.repository';
 import { ProfileImage } from './auth/profile-image.entity';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from 'src/log/log.interceptor';
-import { RateLimitMiddleware } from './log/log.middleware';
+import { RateLimitMiddleware } from './auth/login.middleware';
 
 @Module({
   imports: [
