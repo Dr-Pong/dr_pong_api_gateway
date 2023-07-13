@@ -44,7 +44,7 @@ export class GatewayUserCollectablesController {
       );
       return response?.data;
     } catch (error) {
-      throw error.response?.data;
+      throw error;
     }
   }
 
@@ -61,7 +61,7 @@ export class GatewayUserCollectablesController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -75,7 +75,7 @@ export class GatewayUserCollectablesController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -109,7 +109,7 @@ export class GatewayUserCollectablesController {
         },
       );
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -131,7 +131,7 @@ export class GatewayUserCollectablesController {
         },
       );
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -151,7 +151,7 @@ export class GatewayUserCollectablesController {
         },
       );
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -171,7 +171,7 @@ export class GatewayUserCollectablesController {
         },
       );
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -187,7 +187,7 @@ export class GatewayUserCollectablesController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 }
