@@ -1,5 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Mutex } from 'async-mutex';
+import { interval } from 'rxjs';
+
 export class RequestDataDto {
   req: Request;
   requestTime: Date;
@@ -84,7 +86,10 @@ export class RateLimitMiddleware implements NestMiddleware {
       }
       this.requests.add(req);
       if (waitingTime < this.intervalTime) {
-        setTimeout(() => this.requests.delete(), waitingTime);
+        setTimeout(
+          () => this.requests.delete(),
+          this.intervalTime - waitingTime,
+        );
       } else {
         this.requests.delete();
       }
