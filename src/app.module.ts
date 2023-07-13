@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GatewayModule } from './gateway/gateway.module';
@@ -14,6 +14,7 @@ import { ProfileImageRepository } from './auth/profile-image.repository';
 import { ProfileImage } from './auth/profile-image.entity';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from 'src/log/log.interceptor';
+import { RateLimitMiddleware } from './auth/login.middleware';
 
 @Module({
   imports: [
@@ -47,4 +48,8 @@ import { LoggingInterceptor } from 'src/log/log.interceptor';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RateLimitMiddleware).forRoutes('auth/42');
+  }
+}
