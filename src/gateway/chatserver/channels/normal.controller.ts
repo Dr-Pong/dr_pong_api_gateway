@@ -138,19 +138,18 @@ export class GatewayChannelNormalController {
     }
   }
 
-  @Post('/:roomId/invitation/:nickname')
+  @Post('/:roomId/invitation')
   @UseGuards(AuthGuard('jwt'))
   async channelInvitationPost(
     @Req() request,
     @Param('roomId') channelId: string,
-    @Param('nickname') nickname: string,
+    @Body('nickname') nickname: string,
   ): Promise<void> {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
-        process.env.CHATSERVER_URL +
-          `/channels/${channelId}/invitation/${nickname}`,
-        {},
+        process.env.CHATSERVER_URL + `/channels/${channelId}/invitation`,
+        { nickname: nickname },
         {
           headers: {
             Authorization: accessToken,
