@@ -18,18 +18,18 @@ import { GameInviteAcceptDto } from './dto/game-invite-accept.dto';
 export class GatewayGameController {
   private readonly logger: Logger = new Logger(GatewayGameController.name);
 
-  @Post('/invitation/:nickname')
+  @Post('/invitation')
   @UseGuards(AuthGuard('jwt'))
   async gameInvitePost(
     @Req() request,
     @Param('nickname') nickname: string,
-    @Body('mode') mode: GameMode,
+    @Body() body: { nickname: string; mode: GameMode },
   ): Promise<void> {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
-        process.env.GAMESERVER_URL + `/games/invitation/${nickname}`,
-        mode,
+        process.env.GAMESERVER_URL + `/games/invitation`,
+        body,
         {
           headers: {
             Authorization: accessToken,
@@ -135,7 +135,7 @@ export class GatewayGameController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.delete(
-        process.env.GAMESERVER_URL + `/games/qeueu`,
+        process.env.GAMESERVER_URL + `/games/queue`,
         {
           headers: {
             Authorization: accessToken,
