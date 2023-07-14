@@ -116,7 +116,7 @@ export class GatewayGameController {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
         process.env.GAMESERVER_URL + `/games/queue/${type}`,
-        mode,
+        { mode: mode },
         {
           headers: {
             Authorization: accessToken,
