@@ -11,6 +11,7 @@ import axios from 'axios';
 import { AuthGuard } from '@nestjs/passport';
 import { FriendRequestCountResponseDto } from './dtos/friend-request-count-response.dto';
 import ChannelInviteListResponseDto from './dtos/channel-invite-list-response.dto';
+import { NotificationResponseDto } from './dtos/notification-response.dto';
 
 @Controller('/users/notifications')
 export class GateWayNotificationController {
@@ -35,7 +36,7 @@ export class GateWayNotificationController {
       );
       return response.data;
     } catch (error) {
-      throw error.response?.data;
+      throw error;
     }
   }
 
@@ -56,7 +57,7 @@ export class GateWayNotificationController {
       );
       return response.data;
     } catch (error) {
-      throw error.response?.data;
+      throw error;
     }
   }
 
@@ -68,7 +69,7 @@ export class GateWayNotificationController {
   ): Promise<void> {
     try {
       const accessToken = request.headers.authorization;
-      const response = await axios.get(
+      const response = await axios.delete(
         process.env.CHATSERVER_URL + `/users/notifications/channels/${id}`,
         {
           headers: {
@@ -78,7 +79,26 @@ export class GateWayNotificationController {
       );
       return response.data;
     } catch (error) {
-      throw error.response?.data;
+      throw error;
+    }
+  }
+
+  @Get('/games')
+  @UseGuards(AuthGuard('jwt'))
+  async GameNotificationsGet(@Req() request): Promise<NotificationResponseDto> {
+    try {
+      const accessToken = request.headers.authorization;
+      const response = await axios.get(
+        process.env.GAMESERVER_URL + `/users/notifications/games`,
+        {
+          headers: {
+            Authorization: accessToken,
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   }
 }
