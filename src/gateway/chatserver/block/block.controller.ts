@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import axios from 'axios';
 import { AuthGuard } from '@nestjs/passport';
-import { BlocksUserResponseDto } from '../dtos/user-blocks-response.dto';
+import { BlocksUserResponseDto } from '../friends/dtos/user-blocks-response.dto';
 
 @Controller('/users/blocks')
 export class GatewayBlockController {
