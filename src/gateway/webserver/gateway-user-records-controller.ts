@@ -3,6 +3,7 @@ import axios from 'axios';
 import { UserDetailResponseDto } from './dtos/user-detail-response.dto';
 import { QueryValidatePipe } from 'src/gateway/validation/custom-query-validate-pipe';
 import { UserGameRecordsResponseDto } from './dtos/user-records-response.dto';
+import { GetUserGameExpResponseDto } from './dtos/user-game-exp.response.dto';
 
 @Controller('users')
 export class GatewayUserRecordsController {
@@ -23,7 +24,7 @@ export class GatewayUserRecordsController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -38,7 +39,22 @@ export class GatewayUserRecordsController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
+    }
+  }
+
+  @Get('/:nickname/records/:gameId/exp')
+  async userGameRecordExp(
+    @Param('nickname') nickname: string,
+    @Param('gameId', new QueryValidatePipe(0)) gameId: number,
+  ): Promise<GetUserGameExpResponseDto> {
+    try {
+      const response = await axios.get(
+        process.env.WEBSERVER_URL + `/users/${nickname}/records/${gameId}/exp`,
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   }
 }

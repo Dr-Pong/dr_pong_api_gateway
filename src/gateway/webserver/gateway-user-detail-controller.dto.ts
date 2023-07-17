@@ -2,7 +2,6 @@ import { Controller, Get, Param, Req } from '@nestjs/common';
 import axios from 'axios';
 import { UserDetailResponseDto } from './dtos/user-detail-response.dto';
 import { AuthService } from 'src/auth/auth.service';
-import { GetUserMeDto } from 'src/auth/dto/get.user.me.dto';
 
 @Controller('users')
 export class GatewayUserDetailController {
@@ -17,7 +16,7 @@ export class GatewayUserDetailController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
   @Get('/me')

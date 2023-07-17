@@ -17,7 +17,7 @@ export class GatewayRankController {
       );
       return response.data;
     } catch (error) {
-      throw error.response?.data;
+      throw error;
     }
   }
 
@@ -33,7 +33,7 @@ export class GatewayRankController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 }
