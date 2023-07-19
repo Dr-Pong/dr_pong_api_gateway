@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import axios from 'axios';
 import { AuthGuard } from '@nestjs/passport';
-import { FriendListResponseDto } from '../dtos/friend-list-response.dto';
-import { FriendPendingListResponseDto } from '../dtos/friend-pending-list-response.dto';
+import { FriendListResponseDto } from './dtos/friend-list-response.dto';
+import { FriendPendingListResponseDto } from './dtos/friend-pending-list-response.dto';
 
 @Controller('users/friends')
 export class GatewayFriendRelationController {

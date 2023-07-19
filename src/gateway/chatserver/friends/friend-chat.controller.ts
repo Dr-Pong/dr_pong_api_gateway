@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import axios from 'axios';
 import { AuthGuard } from '@nestjs/passport';
-import { FriendDirectMessageChatListResponseDto } from '../dtos/friend-direct-message-chat-list-response.dto';
-import { PostFriendChatRequestDto } from '../dtos/friend-post-chat-request.dto';
-import { FriendDirectMessageRoomListResponseDto } from '../dtos/friend-direct-message-room-list-response.dto';
-import { FriendDirectMessageNewResponseDto } from '../dtos/friend-direct-message-new-response.dto';
+import { FriendDirectMessageChatListResponseDto } from './dtos/friend-direct-message-chat-list-response.dto';
+import { PostFriendChatRequestDto } from './dtos/friend-post-chat-request.dto';
+import { FriendDirectMessageRoomListResponseDto } from './dtos/friend-direct-message-room-list-response.dto';
+import { FriendDirectMessageNewResponseDto } from './dtos/friend-direct-message-new-response.dto';
 import { QueryValidatePipe } from 'src/gateway/validation/custom-query-validate-pipe';
 
 @Controller('/users/friends')
