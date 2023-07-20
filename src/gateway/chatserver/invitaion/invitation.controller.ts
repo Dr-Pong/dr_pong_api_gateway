@@ -30,7 +30,7 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
-        process.env.GAMESERVER_URL + `/invitation/games`,
+        process.env.GAMESERVER_URL + `/invitations/games`,
         body,
         {
           headers: {
@@ -50,7 +50,7 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.delete(
-        process.env.GAMESERVER_URL + `/invitation/games`,
+        process.env.GAMESERVER_URL + `/invitations/games`,
         {
           headers: {
             Authorization: accessToken,
@@ -72,7 +72,7 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.patch(
-        process.env.GAMESERVER_URL + `/invitation/games/${id}`,
+        process.env.GAMESERVER_URL + `/invitations/games/${id}`,
         {
           headers: {
             Authorization: accessToken,
@@ -94,7 +94,7 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.delete(
-        process.env.GAMESERVER_URL + `/invitation/games/${id}`,
+        process.env.GAMESERVER_URL + `/invitations/games/${id}`,
         {
           headers: {
             Authorization: accessToken,
@@ -117,7 +117,7 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
-        process.env.CHATSERVER_URL + `/invitation/channels/${channelId}`,
+        process.env.CHATSERVER_URL + `/invitations/channels/${channelId}`,
         { nickname: nickname },
         {
           headers: {
@@ -140,7 +140,7 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.patch(
-        process.env.CHATSERVER_URL + `/invitation/channels/${channelId}`,
+        process.env.CHATSERVER_URL + `/invitations/channels/${channelId}`,
         {},
         {
           headers: {
