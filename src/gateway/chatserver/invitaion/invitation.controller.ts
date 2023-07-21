@@ -30,7 +30,7 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.post(
-        process.env.GAMESERVER_URL + `/invitations/games`,
+        process.env.CHATSERVER_URL + `/invitations/games`,
         body,
         {
           headers: {
@@ -50,7 +50,7 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.delete(
-        process.env.GAMESERVER_URL + `/invitations/games`,
+        process.env.CHATSERVER_URL + `/invitations/games`,
         {
           headers: {
             Authorization: accessToken,
@@ -72,7 +72,8 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.patch(
-        process.env.GAMESERVER_URL + `/invitations/games/${id}`,
+        process.env.CHATSERVER_URL + `/invitations/games/${id}`,
+        {},
         {
           headers: {
             Authorization: accessToken,
@@ -94,7 +95,7 @@ export class GatewayInvitationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.delete(
-        process.env.GAMESERVER_URL + `/invitations/games/${id}`,
+        process.env.CHATSERVER_URL + `/invitations/games/${id}`,
         {
           headers: {
             Authorization: accessToken,

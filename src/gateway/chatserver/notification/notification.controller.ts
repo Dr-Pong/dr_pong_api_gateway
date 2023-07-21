@@ -89,7 +89,7 @@ export class GateWayNotificationController {
     try {
       const accessToken = request.headers.authorization;
       const response = await axios.get(
-        process.env.GAMESERVER_URL + `/users/notifications/games`,
+        process.env.CHATSERVER_URL + `/users/notifications/games`,
         {
           headers: {
             Authorization: accessToken,
