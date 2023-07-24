@@ -44,7 +44,7 @@ export class AuthService {
     if (user.secondAuthSecret) throw new BadRequestException();
 
     const cipher = crypto.createCipheriv(
-      'aes-256-cbc',
+      process.env.CRYPTO_ALGORITHM,
       Buffer.from(process.env.CRYPTO_SECRET_KEY, 'hex'), // Use your own secret key
       Buffer.from(process.env.CRYPTO_SECRET_IV, 'hex'),
     );
@@ -63,7 +63,7 @@ export class AuthService {
       return;
     }
     const decipher = crypto.createDecipheriv(
-      'aes-256-cbc',
+      process.env.CRYPTO_ALGORITHM,
       Buffer.from(process.env.CRYPTO_SECRET_KEY, 'hex'), // Use your own secret key
       Buffer.from(process.env.CRYPTO_SECRET_IV, 'hex'), // Use the IV you used for encryption
     );
@@ -87,7 +87,7 @@ export class AuthService {
     if (!user.secondAuthSecret) throw new BadRequestException();
 
     const decipher = crypto.createDecipheriv(
-      'aes-256-cbc',
+      process.env.CRYPTO_ALGORITHM,
       Buffer.from(process.env.CRYPTO_SECRET_KEY, 'hex'), // Use your own secret key
       Buffer.from(process.env.CRYPTO_SECRET_IV, 'hex'), // Use the IV you used for encryption
     );
