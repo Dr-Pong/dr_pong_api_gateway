@@ -22,6 +22,7 @@ import { User } from '../user/user.entity';
 import { ProfileImage } from './profile-image.entity';
 import { generateOtpDto } from './dto/auth.generateOtp.response.dto';
 import { postUserDto } from './dto/post.user.dto';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -42,16 +43,33 @@ export class AuthService {
     const user = await this.userRepository.findById(userId);
     if (user.secondAuthSecret) throw new BadRequestException();
 
-    this.secondAuth.set(userId, secretKey);
+    const cipher = crypto.createCipheriv(
+      'aes-256-cbc',
+      Buffer.from(process.env.CRYPTO_SECRET_KEY, 'hex'), // Use your own secret key
+      Buffer.from(process.env.CRYPTO_SECRET_IV, 'hex'),
+    );
+    let encryptedSecretKey = cipher.update(secretKey, 'utf-8', 'base64');
+    encryptedSecretKey += cipher.final('base64');
+
+    this.secondAuth.set(userId, encryptedSecretKey);
+
     return generateOtpDto.response(secretKey, url, qrCode);
   }
 
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
   async checkOtpApplied(userId: number, token: string) {
-    const secretKey = this.secondAuth.get(userId);
-    if (!secretKey) {
+    const encryptedSecretKey = this.secondAuth.get(userId);
+    if (!encryptedSecretKey) {
       return;
     }
+    const decipher = crypto.createDecipheriv(
+      'aes-256-cbc',
+      Buffer.from(process.env.CRYPTO_SECRET_KEY, 'hex'), // Use your own secret key
+      Buffer.from(process.env.CRYPTO_SECRET_IV, 'hex'), // Use the IV you used for encryption
+    );
+    let secretKey = decipher.update(encryptedSecretKey, 'base64', 'utf-8');
+    secretKey += decipher.final('utf-8');
+
     const isValid: boolean = authenticator.verify({
       token,
       secret: secretKey,
@@ -60,7 +78,7 @@ export class AuthService {
     const user = await this.userRepository.findById(userId);
     if (user.secondAuthSecret) throw new BadRequestException();
 
-    await this.userRepository.updateSecondAuth(user, secretKey);
+    await this.userRepository.updateSecondAuth(user, encryptedSecretKey);
   }
 
   @Transactional({ isolationLevel: IsolationLevel.REPEATABLE_READ })
@@ -68,9 +86,16 @@ export class AuthService {
     const user: User = await this.userRepository.findById(userId);
     if (!user.secondAuthSecret) throw new BadRequestException();
 
+    const decipher = crypto.createDecipheriv(
+      'aes-256-cbc',
+      Buffer.from(process.env.CRYPTO_SECRET_KEY, 'hex'), // Use your own secret key
+      Buffer.from(process.env.CRYPTO_SECRET_IV, 'hex'), // Use the IV you used for encryption
+    );
+    let secretKey = decipher.update(user.secondAuthSecret, 'base64', 'utf-8');
+    secretKey += decipher.final('utf-8');
     const isValid: boolean = authenticator.verify({
       token,
-      secret: user.secondAuthSecret,
+      secret: secretKey,
     });
     if (!isValid) throw new UnauthorizedException();
 
