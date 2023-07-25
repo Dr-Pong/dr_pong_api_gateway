@@ -1,20 +1,14 @@
-import {
-  IsPositive,
-  IsString,
-  Length,
-  IsNotEmpty,
-  IsInt,
-  Min,
-} from 'class-validator';
+import { IsPositive, IsString, Length, IsNotEmpty, Min } from 'class-validator';
 import {
   FixedArraySize,
   CheckArrayValueNumberOrNull,
 } from 'src/gateway/validation/custom-decorator-validate';
+import { IsIntOrNull } from '../validation/custom-decorator-validate';
 
 export class PatchUserTitleRequestDto {
-  @IsInt()
-  @Min(0)
-  id: number;
+  @IsIntOrNull()
+  @Min(1)
+  id: number | null;
 }
 
 export class PatchUserImageRequestDto {
