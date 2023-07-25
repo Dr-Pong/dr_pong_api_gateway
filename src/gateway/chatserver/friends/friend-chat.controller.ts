@@ -43,7 +43,7 @@ export class GatewayFriendChatController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -65,7 +65,7 @@ export class GatewayFriendChatController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -84,7 +84,7 @@ export class GatewayFriendChatController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -104,7 +104,7 @@ export class GatewayFriendChatController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 
@@ -123,7 +123,7 @@ export class GatewayFriendChatController {
       );
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error;
     }
   }
 }
