@@ -10,7 +10,7 @@ import { ROLETYPE_NONAME } from '../../user/type.user.roletype';
 export class JwtStrategyNoname extends PassportStrategy(Strategy, 'jwtNoname') {
   constructor(private readonly userRepository: UserRepository) {
     super({
-      secretOrKey: 'jwtSecret',
+      secretOrKey: process.env.JWT_SECRET_KEY,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }

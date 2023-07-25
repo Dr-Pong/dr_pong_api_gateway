@@ -15,9 +15,9 @@ import { JwtStrategyNoname } from './jwt/noname.jwt.strategy';
   imports: [
     PassportModule.register({ Strategy: ['jwt', 'jwtNoname'] }),
     JwtModule.register({
-      secret: 'jwtSecret',
+      secret: process.env.JWT_SECRET_KEY,
       signOptions: {
-        expiresIn: 60 * 60 * 60,
+        expiresIn: +process.env.JWT_EXPIRATION_TIME,
       },
     }),
     TypeOrmModule.forFeature([User, ProfileImage]),

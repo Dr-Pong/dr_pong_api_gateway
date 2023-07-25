@@ -25,9 +25,9 @@ export class LoggingInterceptor implements NestInterceptor {
   }
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const jwtService: JwtService = new JwtService({
-      secret: 'jwtSecret',
+      secret: process.env.JWT_SECRET_KEY,
       signOptions: {
-        expiresIn: 60 * 60 * 60,
+        expiresIn: process.env.JWT_EXPIRATION_TIME,
       },
     });
     const request: any = context.switchToHttp().getRequest();
