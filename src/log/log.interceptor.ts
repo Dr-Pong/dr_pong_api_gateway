@@ -27,7 +27,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const jwtService: JwtService = new JwtService({
       secret: process.env.JWT_SECRET_KEY,
       signOptions: {
-        expiresIn: process.env.JWT_EXPIRATION_TIME,
+        expiresIn: +process.env.JWT_EXPIRATION_TIME,
       },
     });
     const request: any = context.switchToHttp().getRequest();
