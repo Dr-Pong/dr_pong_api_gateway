@@ -1,5 +1,5 @@
 export class UserSeasonRankResponseDto {
-  record: number | null;
+  bestLp: number | null;
 
   rank: number | null;
 

@@ -1,5 +1,5 @@
 export class UserTotalRankResponseDto {
-  record: number | null;
+  bestLp: number | null;
 
   rank: number | null;
 
