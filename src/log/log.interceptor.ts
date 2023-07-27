@@ -25,7 +25,7 @@ export class LoggingInterceptor implements NestInterceptor {
   }
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const jwtService: JwtService = new JwtService({
-      secret: process.env.JWT_SECRET_KEY,
+      secret: process.env.JWT_SECRET,
       signOptions: {
         expiresIn: +process.env.JWT_EXPIRATION_TIME,
       },
@@ -119,15 +119,8 @@ export class LoggingInterceptor implements NestInterceptor {
           stackTrace: stackTrace,
           userInfo: userInfo,
         });
-        let statusCode, output;
-        if (Object.prototype.hasOwnProperty.call(error.response, 'data')) {
-          statusCode = error.response.data.statusCode;
-          output = error.response.data;
-        } else {
-          statusCode = error.response.statusCode;
-          output = error.response;
-        }
-        if (statusCode < 500) {
+
+        if (error.response?.data?.statusCode < 500) {
           const responseLogEntry = new ResponseLogEntryDto({
             level: 'info',
             message: 'TEST',

@@ -10,7 +10,7 @@ import { ROLETYPE_NONAME } from '../../user/type.user.roletype';
 export class JwtStrategyNoname extends PassportStrategy(Strategy, 'jwtNoname') {
   constructor(private readonly userRepository: UserRepository) {
     super({
-      secretOrKey: process.env.JWT_SECRET_KEY,
+      secretOrKey: process.env.JWT_SECRET,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
@@ -23,7 +23,7 @@ export class JwtStrategyNoname extends PassportStrategy(Strategy, 'jwtNoname') {
   async findUser(token: TokenInterface): Promise<AuthDto> {
     const userFromDb = await this.userRepository.findById(+token['id']);
     if (userFromDb.nickname) throw new BadRequestException();
-
+    
     const existUser: AuthDto = new AuthDto(
       userFromDb.id,
       userFromDb.nickname,
