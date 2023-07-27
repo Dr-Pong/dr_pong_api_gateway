@@ -119,8 +119,15 @@ export class LoggingInterceptor implements NestInterceptor {
           stackTrace: stackTrace,
           userInfo: userInfo,
         });
-
-        if (error.response?.data?.statusCode < 500) {
+        let statusCode, output;
+        if (Object.prototype.hasOwnProperty.call(error.response, 'data')) {
+          statusCode = error.response.data.statusCode;
+          output = error.response.data;
+        } else {
+          statusCode = error.response.statusCode;
+          output = error.response;
+        }
+        if (statusCode < 500) {
           const responseLogEntry = new ResponseLogEntryDto({
             level: 'info',
             message: 'TEST',
@@ -130,15 +137,15 @@ export class LoggingInterceptor implements NestInterceptor {
             FunctionName: FunctionName,
             context: 'Your Log Context',
             userInfo,
-            return: error.response.data,
+            return: output,
           });
           this.logger.log(responseLogEntry);
         } else {
           this.logger.error(errorLogEntry);
           const customError = new HttpException('Bad Request', 400);
-          return throwError(() => customError); // 400 에러를 throwError
+          return throwError(() => customError);
         }
-        return throwError(() => error);
+        return throwError(() => output);
       }),
     );
   }
