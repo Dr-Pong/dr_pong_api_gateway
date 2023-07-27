@@ -3,9 +3,9 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 export const typeORMConfig: TypeOrmModuleOptions = {
   name: 'api',
   type: 'postgres',
-  host: 'localhost',
+  host: 'api-db',
   port: 5432,
-  username: 'jyp', // postgres
+  username: 'postgres', // postgres
   password: 'postgres',
   database: 'auth',
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
