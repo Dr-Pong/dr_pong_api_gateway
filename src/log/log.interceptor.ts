@@ -76,7 +76,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     const requestLogEntry: RequestLogEntryDto = new RequestLogEntryDto({
       level: 'info',
-      message: 'TEST',
+      message: 'OK',
       type: 'Request',
       context: 'Your Log Context',
       ip: ip,
@@ -93,7 +93,7 @@ export class LoggingInterceptor implements NestInterceptor {
       tap((controllerReturnValue) => {
         const responseLogEntry = new ResponseLogEntryDto({
           level: 'info',
-          message: 'TEST',
+          message: 'OK',
           type: 'Response',
           ip: ip,
           ClassName: ClassName,
@@ -121,6 +121,24 @@ export class LoggingInterceptor implements NestInterceptor {
         });
 
         let statusCode, output;
+        if(!error.response)
+        {
+          const serverErrorLogEntry = new ErrorLogEntryDto({
+            level: 'error',
+            message: 'Error',
+            type: 'Error',
+            context: 'Your Log Context',
+            ip: ip,
+            ClassName: ClassName,
+            FunctionName: FunctionName,
+            errorMessage: error,
+            stackTrace: stackTrace,
+            userInfo: userInfo,
+          });
+          this.logger.error(serverErrorLogEntry);
+          const customError = new HttpException('Bad Request', 400);
+          return throwError(() => customError);
+        }
         if (Object.prototype.hasOwnProperty.call(error.response, 'data')) {
           statusCode = error.response.data.statusCode;
           output = error.response.data;
@@ -132,7 +150,7 @@ export class LoggingInterceptor implements NestInterceptor {
         if (statusCode < 500) {
           const responseLogEntry = new ResponseLogEntryDto({
             level: 'info',
-            message: 'TEST',
+            message: 'WARN',
             type: 'Response',
             ip: ip,
             ClassName: ClassName,
