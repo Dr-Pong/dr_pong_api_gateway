@@ -12,3 +12,18 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   synchronize: true,
   poolSize: 10,
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
