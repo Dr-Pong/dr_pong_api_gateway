@@ -1,9 +1,9 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export const typeORMConfig: TypeOrmModuleOptions = {
-  name: 'api',
+  name: 'api_gateway',
   type: 'postgres',
-  host: 'api-db',
+  // host: 'api-db',
   port: 5432,
   username: process.env.API_DB_USER,
   password: process.env.API_DB_PASSWORD,
@@ -12,3 +12,11 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   synchronize: true,
   poolSize: 10,
 };
+
+
+
+
+
+
+
+
