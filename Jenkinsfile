@@ -21,6 +21,11 @@ pipeline {
                 checkout scm  // 프로젝트 루트 디렉토리에서 checkout 실행
             }
         }
+        stage('install dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
         stage('Build') {
             steps {
                 // 여기에 루트 디렉토리에서 실행할 작업을 정의합니다.
