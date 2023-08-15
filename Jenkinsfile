@@ -12,6 +12,9 @@
 // }
 pipeline {
     agent any
+    tools {
+        nodejs "Jenkins-nodejs"
+    }
     stages {
         stage('Checkout') {
             steps {
