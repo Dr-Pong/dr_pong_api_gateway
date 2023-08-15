@@ -12,9 +12,9 @@
 // }
 pipeline {
     agent any
-    tools {
-        nodejs "Jenkins-nodejs"
-    }
+    // tools {
+    //     nodejs "nodejs"
+    // }
     stages {
         stage('Checkout') {
             steps {
@@ -24,7 +24,7 @@ pipeline {
         stage('Build') {
             steps {
                 // 여기에 루트 디렉토리에서 실행할 작업을 정의합니다.
-                sh 'npm build'
+                sh 'npm run build'
             }
         }
         // 다른 스테이지들...
