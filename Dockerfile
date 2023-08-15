@@ -16,5 +16,7 @@ COPY . .
 # Expose the desired port 
 EXPOSE 2999
 
+RUN npm run build
+
 # Run the server
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start:prod" ]
