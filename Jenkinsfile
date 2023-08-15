@@ -13,6 +13,13 @@
 pipeline {
     agent any
     stages {
+        stage('1') {
+            steps {
+                git branch: 'main',
+                credentialsId: 'GitHub_access_token',
+                url: 'https://github.com/Dr-Pong/dr_pong_api_gateway'
+            }
+        }
         stage('Checkout') {
             steps {
                 checkout scm  // 프로젝트 루트 디렉토리에서 checkout 실행
