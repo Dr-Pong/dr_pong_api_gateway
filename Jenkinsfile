@@ -13,7 +13,7 @@
 pipeline {
     agent any
     tools {
-        nodejs "Jenkins_nodejs"
+        nodejs "Jenkins-nodejs"
     }
     stages {
         stage('Checkout') {
