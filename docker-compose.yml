@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  api:
+    container_name: api
+    build:
+      context: ./dr_pong_api_gateway
+      dockerfile: Dockerfile
+    ports:
+      - 2999:2999
+    networks:
+      - my-network
+    depends_on:
+      - api-db
+    env_file:
+      - ./.env
+    environment:
+      - TYPEORM_HOST=api-db
+    volumes:
+      - api-db-data:/var/lib/postgresql/data
+
+  api-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${API_DB_USER}
+      POSTGRES_PASSWORD: ${API_DB_PASSWORD}
+      POSTGRES_DB: ${API_DB_NAME}
+    ports:
+      - 5432:5432
+    networks:
+      - my-network
+    volumes:
+      - api-db-data:/var/lib/postgresql/data
+
+# networks:
+#   my-network:
+#     name: my-network
+#     driver: bridge
+
+volumes:
+  api-db-data:
+  # chat-db-data:
+  # web-db-data:
+  # game-db-data:
+  # game-redis-data:
