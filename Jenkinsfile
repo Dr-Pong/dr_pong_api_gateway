@@ -35,7 +35,6 @@ pipeline {
         stage('Docker') {
             steps {
                 sh 'docker compose up -d --build'
-                
             }
         }
         // 다른 스테이지들...
