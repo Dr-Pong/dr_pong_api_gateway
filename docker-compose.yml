@@ -31,10 +31,10 @@ services:
     volumes:
       - api-db-data:/var/lib/postgresql/data
 
-# networks:
-#   my-network:
-#     name: my-network
-#     driver: bridge
+networks:
+  my-network:
+    name: my-network
+    driver: bridge
 
 volumes:
   api-db-data:
