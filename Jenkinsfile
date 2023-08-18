@@ -23,7 +23,7 @@ pipeline {
         }
         stage('install env file') {
             steps {
-                 cp '$WORKSPACE/.env /var/jenkins_home/workspace/dr_pong_test'
+                sh 'cp $WORKSPACE/.env /var/jenkins_home/workspace/dr_pong_test'
             }
         }
         stage('Install Dependencies') {
