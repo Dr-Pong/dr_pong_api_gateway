@@ -21,6 +21,11 @@ pipeline {
                 checkout scm  // 프로젝트 루트 디렉토리에서 checkout 실행
             }
         }
+        stage('install env file') {
+            steps {
+                 cp '$WORKSPACE/.env /var/jenkins_home/workspace/dr_pong_test'
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
