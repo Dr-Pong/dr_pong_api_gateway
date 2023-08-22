@@ -7,7 +7,6 @@ import { IsIntOrNull } from '../validation/custom-decorator-validate';
 
 export class PatchUserTitleRequestDto {
   @IsIntOrNull()
-  @Min(1)
   id: number | null;
 }
 
@@ -18,7 +17,6 @@ export class PatchUserImageRequestDto {
 
 export class PatchUserMessageRequestDto {
   @IsString()
-  @IsNotEmpty()
   @Length(0, 60, {
     message: 'Message length must be between 1 and 60 characters',
   })

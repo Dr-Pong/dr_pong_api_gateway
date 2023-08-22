@@ -63,6 +63,7 @@ export class AuthController {
       nickname: body.nickname,
       imageId: body.imgId,
     });
+    console.log(signedUser);
     const accessToken = await this.authService.createJwtFromUser(signedUser);
 
     return new JwtDto(accessToken);
