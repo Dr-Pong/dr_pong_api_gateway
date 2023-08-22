@@ -39,9 +39,10 @@ pipeline {
         }
         stage('Docker') {
             steps {
-                sh 'sudo chmod 666 /var/run/docker.sock'
+                // sh 'sudo chmod 666 /var/run/docker.sock'
                 sh 'docker --version'
-                sh 'sudo docker compose up -d --build'
+                sh 'docker ps'
+                // sh 'sudo docker compose up -d --build'
             }
         }
         // 다른 스테이지들...
