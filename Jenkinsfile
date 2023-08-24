@@ -41,7 +41,8 @@ pipeline {
             steps {
                 sh 'docker --version'
                 sh 'docker ps'
-                // sh 'sudo docker compose up -d --build'
+                sh 'docker-compose up -d --build'
+                sh 'docker ps'
             }
         }
         // 다른 스테이지들...
