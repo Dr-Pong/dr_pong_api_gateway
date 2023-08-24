@@ -13,7 +13,7 @@
 pipeline {
     agent any
     tools {
-        nodejs "Jenkins-nodejs"
+        nodejs "jenkins-nodejs"
     }
     stages {
         stage('Checkout') {
@@ -39,7 +39,6 @@ pipeline {
         }
         stage('Docker') {
             steps {
-                // sh 'sudo chmod 666 /var/run/docker.sock'
                 sh 'docker --version'
                 sh 'docker ps'
                 // sh 'sudo docker compose up -d --build'
