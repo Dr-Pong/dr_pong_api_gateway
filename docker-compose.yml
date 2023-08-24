@@ -3,7 +3,7 @@ services:
   api:
     container_name: api
     build:
-      context: ./dr_pong_api_gateway
+      context: ./
       dockerfile: Dockerfile
     ports:
       - 2999:2999
