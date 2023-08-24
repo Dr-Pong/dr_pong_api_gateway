@@ -51,16 +51,17 @@ pipeline {
         // 얘는 지금 안에 안에 가아니라 안에 서 빌드한얘를 가져다가 하는거임 
         stage('Deploy to AWS') {
             steps {
-                sh 'cp -r /var/jenkins_home/workspace/drpong_apigateway/dist package.json package-lock.json tsconfig.build.json docker-compose.yml deploy'
+                sh 'chmod +x deploy/deploy.sh'
+                sh 'cp -r /var/jenkins_home/workspace/drpong_apigateway/dist package.json package-lock.json tsconfig.build.json docker-compose.yml .env deploy'
                 sh 'scp -i /var/local/deploy-api-key.pem -r /var/jenkins_home/workspace/drpong_apigateway/deploy ec2-user@43.200.254.59:/home/ec2-user/drpong_apigateway'
 
             }
         }
-        // stage('Deploy start') {
-        //     steps {
-        //         sh 'ssh -i /var/local/deploy-api-key.pem ec2-user@43.200.254.59 "cd /home/ec2-user/drpong_apigateway && ./deploy.sh"'
-        //     }
-        // }
+        stage('Deploy start') {
+            steps {
+                sh 'ssh -i /var/local/deploy-api-key.pem ec2-user@43.200.254.59 "cd /home/ec2-user/drpong_apigateway/deploy && ./deploy.sh"'
+            }
+        }
         // 다른 스테이지들...
     }
 }
