@@ -37,16 +37,17 @@ pipeline {
                 sh 'npm run build'
             }
         }
-        stage('Docker in Docker Build') {
-            steps {
-                // sh 'docker-compose up -d --build'
-            }
-        }
-        stage('Docker in Docker test') {
-            steps {
-                // sh 'docker-compose exec drpong_apigateway npm run test'
-            }
-        }
+        // stage('Docker in Docker Build') {
+        //     steps {
+        //         sh 'docker-compose up -d --build'
+        //     }
+        // }
+       
+        // stage('Docker in Docker test') {
+        //     steps {
+        //         sh 'docker-compose exec drpong_apigateway npm run test'
+        //     }
+        // }
         // 얘는 지금 안에 안에 가아니라 안에 서 빌드한얘를 가져다가 하는거임 
         stage('Deploy to AWS') {
             steps {
@@ -55,11 +56,11 @@ pipeline {
 
             }
         }
-        stage('Deploy start') {
-            steps {
-                // sh 'ssh -i /var/local/deploy-api-key.pem ec2-user@43.200.254.59 "cd /home/ec2-user/drpong_apigateway && ./deploy.sh"'
-            }
-        }
+        // stage('Deploy start') {
+        //     steps {
+        //         sh 'ssh -i /var/local/deploy-api-key.pem ec2-user@43.200.254.59 "cd /home/ec2-user/drpong_apigateway && ./deploy.sh"'
+        //     }
+        // }
         // 다른 스테이지들...
     }
 }
