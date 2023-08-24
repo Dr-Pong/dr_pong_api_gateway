@@ -45,6 +45,15 @@ pipeline {
                 sh 'docker ps'
             }
         }
+        // test 추가 해야함 
+        // 얘는 지금 안에 안에 가아니라 안에 서 빌드한얘를 가져다가 하는거임 
+        stage('Deploy to AWS') {
+            steps {
+                sh 'ls'
+                sh 'pwd'
+                sh 'scp -i /var/local/deploy-api-key.pem -r ./dist ec2-user@43.200.254.59:/home/ec2-user/drpong_apigateway'
+            }
+        }
         // 다른 스테이지들...
     }
 }
