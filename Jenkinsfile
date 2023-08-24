@@ -51,7 +51,7 @@ pipeline {
             steps {
                 sh 'ls'
                 sh 'pwd'
-                sh 'scp -i /var/local/deploy-api-key.pem -r /var/jenkins_home/workspace/drpong_apigateway/dist ec2-user@43.200.254.59:/home/ec2-user/drpong_apigateway'
+                sh 'scp -i /var/local/deploy-api-key.pem -r /var/jenkins_home/workspace/drpong_apigateway/dist package.json package-lock.json ec2-user@43.200.254.59:/home/ec2-user/drpong_apigateway'
             }
         }
         // 다른 스테이지들...
