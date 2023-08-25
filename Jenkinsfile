@@ -1,15 +1,3 @@
-// pipeline {
-//     agent any
-//     stages {
-//         stage('Checkout') {
-//             steps {
-//                 git branch: 'main',
-//                 credentialsId: 'GitHub_access_token',
-//                 url: 'https://github.com/Dr-Pong/dr_pong_api_gateway'
-//             }
-//         }
-//     }
-// }
 pipeline {
     agent any
     tools {
