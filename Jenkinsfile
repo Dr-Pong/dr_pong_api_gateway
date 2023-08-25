@@ -64,6 +64,7 @@ pipeline {
                 sh 'ssh -i /var/local/deploy-api-key.pem ec2-user@${AWS_API} "cd /home/ec2-user/drpong_apigateway/deploy && ./deploy.sh"'
             }
         }
+        
         // 다른 스테이지들.. ec2에 이미 있는 폴더가 있는데 또 오면 어떻게 되는지 ?? 
     }
 }
