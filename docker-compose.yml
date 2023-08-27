@@ -3,7 +3,7 @@ services:
   api:
     container_name: api
     build:
-      context: ./dr_pong_api_gateway
+      context: ./
       dockerfile: Dockerfile
     ports:
       - 2999:2999
@@ -31,10 +31,10 @@ services:
     volumes:
       - api-db-data:/var/lib/postgresql/data
 
-# networks:
-#   my-network:
-#     name: my-network
-#     driver: bridge
+networks:
+  my-network:
+    name: my-network
+    driver: bridge
 
 volumes:
   api-db-data:
