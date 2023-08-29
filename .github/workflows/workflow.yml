@@ -89,6 +89,12 @@ jobs:
 
       - name: Build Docker Image
         run: docker-compose build
+      
+      - name: Run Docker Container
+        run: docker-compose up -d
+      
+      - name: Test
+        run: npm test
 
         # working-directory: path/to/docker-compose/directory 
       # Start the database service
