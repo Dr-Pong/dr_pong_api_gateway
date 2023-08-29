@@ -3,7 +3,8 @@ name: Dr Pong API Server CI
 on:
   push:
     branches:
-      - /^\d+-.*$/
+      # - /^\d+-.*$/
+      - 152-feat-githubaction-ci-npm-test-add
   pull_request:
     branches:
       - main
@@ -27,6 +28,9 @@ jobs:
       - name: Build
         run: npm run build --if-present
 
+      - name: Build Docker Image
+        run: docker-compose build -d
+        # working-directory: path/to/docker-compose/directory 
       # Start the database service
       # - name: Start database service
       #   run: docker-compose up -d chat-db
@@ -45,3 +49,6 @@ jobs:
       # Run tests
       # - name: Run tests
       #   run: npm test
+
+
+  
