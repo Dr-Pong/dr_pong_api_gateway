@@ -30,6 +30,7 @@ jobs:
 
       - name: Build Docker Image
         run: docker-compose build -d
+        
         # working-directory: path/to/docker-compose/directory 
       # Start the database service
       # - name: Start database service
