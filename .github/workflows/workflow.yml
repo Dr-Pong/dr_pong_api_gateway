@@ -27,7 +27,6 @@ jobs:
       # build
       - name: Build
         run: npm run build --if-present
-      - name: Create .env file 
       - name: Create .env file
         run: |
           echo "FT_CLIENT_ID=${{ secrets.FT_CLIENT_ID }}" > .env
