@@ -3,11 +3,11 @@ name: Dr Pong API Server CI
 on:
   push:
     branches:
-      # - /^\d+-.*$/
-      - 152-feat-githubaction-ci-npm-test-add
-  # pull_request:
-  #   branches:
-  #     - main
+      - /^\d+-.*$/
+      - deploy
+  pull_request:
+    branches:
+      - main
 jobs:
   CI:
     runs-on: ubuntu-latest
