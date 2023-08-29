@@ -29,8 +29,8 @@ jobs:
         run: npm run build --if-present
 
       - name: Build Docker Image
-        run: docker-compose build -d
-        
+        run: docker-compose build
+
         # working-directory: path/to/docker-compose/directory 
       # Start the database service
       # - name: Start database service
