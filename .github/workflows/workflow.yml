@@ -95,6 +95,7 @@ jobs:
         run: docker-compose up -d
 
       # api gateway는 pass
-      
+      - name: ls
+        run: ls
       - name: Test
         run: npm test -- --bail
