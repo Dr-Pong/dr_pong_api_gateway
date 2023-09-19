@@ -95,9 +95,7 @@ jobs:
         run: docker-compose up -d
 
       # api gateway는 pass
-      - name: ls
-        run: ls -al
-      - name: cat
-        run: ehco"${{ secrets.API_DB_USER }}"
+      - name: Docker ps 
+        run: docker ps
       - name: Test
         run: npm test -- --bail
