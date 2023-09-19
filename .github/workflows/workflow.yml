@@ -97,6 +97,7 @@ jobs:
       # api gateway는 pass
       - name: ls
         run: ls -al
+      - name: cat
         run: cat .env
       - name: Test
         run: npm test -- --bail
