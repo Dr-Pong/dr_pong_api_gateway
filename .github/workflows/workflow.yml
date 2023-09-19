@@ -98,6 +98,6 @@ jobs:
       - name: ls
         run: ls -al
       - name: cat
-        run: cat .env
+        run: ehco"${{ secrets.API_DB_USER }}"
       - name: Test
         run: npm test -- --bail
