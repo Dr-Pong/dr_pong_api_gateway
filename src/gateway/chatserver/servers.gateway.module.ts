@@ -5,6 +5,7 @@ import { GatewayUserDetailController } from '../webserver/gateway-user-detail-co
 import { GatewayUserStatRankController } from '../webserver/gateway-user-stat-rank-controller';
 import { GatewayUserRecordsController } from '../webserver/gateway-user-records-controller';
 import { GatewayRankController } from '../webserver/gateway-rank-controller';
+import { GatewaySeasonController } from "../webserver/gateway-season-controller";
 import { GatewayFriendRelationController } from './friends/friend-relation.controller';
 import { GatewayBlockController } from './block/block.controller';
 import { GatewayFriendChatController } from './friends/friend-chat.controller';
@@ -23,6 +24,7 @@ import { GatewayInvitationController } from './invitaion/invitation.controller';
     GatewayUserStatRankController,
     GatewayUserRecordsController,
     GatewayRankController,
+    GatewaySeasonController,
   ],
 })
 export class WebserverModule {}

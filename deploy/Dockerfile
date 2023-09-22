@@ -15,7 +15,7 @@ RUN npm install
 COPY dist/ ./dist/
 
 # Expose the desired port
-EXPOSE 2999
+EXPOSE 3000
 
 #RUN npm run build
 
