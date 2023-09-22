@@ -30,8 +30,7 @@ services:
       - my-network
     volumes:
       - api-db-data:/var/lib/postgresql/data
-
-   nginx:
+  nginx:
     image: nginx
     build:
       context: ./nginx
